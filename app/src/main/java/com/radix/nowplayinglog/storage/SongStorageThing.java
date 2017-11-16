@@ -18,7 +18,6 @@ public class SongStorageThing {
   private static final String TITLE_KEY = "title";
   private static final String ARTIST_KEY = "artist";
   private static final String POST_TIME_KEY = "timestamp";
-//  private static final String SONG_ID_KEY = "id";
   private static final String SONG_STORAGE_PREFS_LOCATION = "songs.go.here";
 
   private final SharedPreferences mSongStore;
@@ -41,13 +40,13 @@ public class SongStorageThing {
   }
 
   public void storeSong(Song song) {
+    // TODO: 11/16/2017 Check the last time the song was posted. Directly previous and within 5 min should be excluded!
     JSONObject songObject = new JSONObject();
 
     try {
       songObject.put(TITLE_KEY, song.getTitle());
       songObject.put(ARTIST_KEY, song.getArtist());
       songObject.put(POST_TIME_KEY, song.getPostTime());
-//      songObject.put(SONG_ID_KEY, song.getId());
     } catch (JSONException e) {
       Log.e(TAG, "Failed to add song to storage: " + song, e);
     }

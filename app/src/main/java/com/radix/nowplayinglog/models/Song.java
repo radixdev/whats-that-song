@@ -28,7 +28,8 @@ public class Song {
 
     mPostTime = postTime;
 
-    mId = String.valueOf(notificationTitle.hashCode());
+    mId = String.valueOf(mPostTime);
+//    mId = String.valueOf(notificationTitle.hashCode());
   }
 
   public Song(String title, String artist, long postTime, String id) {
