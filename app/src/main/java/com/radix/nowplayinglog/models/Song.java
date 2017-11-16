@@ -56,6 +56,24 @@ public class Song {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Song song = (Song) o;
+
+    if (!mTitle.equals(song.mTitle)) return false;
+    return mArtist.equals(song.mArtist);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = mTitle.hashCode();
+    result = 31 * result + mArtist.hashCode();
+    return result;
+  }
+
+  @Override
   public String toString() {
     return "Song{" +
         "title='" + mTitle + '\'' +

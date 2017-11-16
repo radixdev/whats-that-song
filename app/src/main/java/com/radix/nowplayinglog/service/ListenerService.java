@@ -29,10 +29,15 @@ public class ListenerService extends NotificationListenerService {
       Log.d(TAG, "now playing notif posted!");
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
       Song song = new Song(notificationTitle, sbn.getPostTime());
+      Log.d(TAG, "current song: " +  song);
+
+      if (mSongStorage.isSongRepost(song)) {
+        Log.d(TAG, "current song is a repost, ignoring");
+        return;
+      }
 
       // Now store it
       mSongStorage.storeSong(song);
-      Log.d(TAG, "song: " +  song);
 
       // Now notify people that storage has been updated
       Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);

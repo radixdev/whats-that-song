@@ -20,10 +20,15 @@ public class SongStorageThing {
   private static final String POST_TIME_KEY = "timestamp";
   private static final String SONG_STORAGE_PREFS_LOCATION = "songs.go.here";
 
+  private static final String SONG_LAST_POSTED_PREFS_LOCATION = "songs.history";
+  private static final String SONG_LAST_POSTED_ID_KEY = "songs.history.id";
+
   private final SharedPreferences mSongStore;
+  private final SharedPreferences mSongLastPosted;
 
   public SongStorageThing(Context context) {
     mSongStore = context.getSharedPreferences(SONG_STORAGE_PREFS_LOCATION, Context.MODE_PRIVATE);
+    mSongLastPosted = context.getSharedPreferences(SONG_LAST_POSTED_PREFS_LOCATION, Context.MODE_PRIVATE);
   }
 
   public List<Song> getAllSongs() {
@@ -40,7 +45,6 @@ public class SongStorageThing {
   }
 
   public void storeSong(Song song) {
-    // TODO: 11/16/2017 Check the last time the song was posted. Directly previous and within 5 min should be excluded!
     JSONObject songObject = new JSONObject();
 
     try {
@@ -54,6 +58,11 @@ public class SongStorageThing {
     SharedPreferences.Editor editor = mSongStore.edit();
     editor.putString(song.getId(), songObject.toString());
     editor.apply();
+
+    // Update the last song metadata
+    editor = mSongLastPosted.edit();
+    editor.putString(SONG_LAST_POSTED_ID_KEY, song.getId());
+    editor.apply();
   }
 
   public Song getSong(String id) {
@@ -63,6 +72,19 @@ public class SongStorageThing {
       return getSongFromJsonBody(id, songJsonBody);
     }
     return null;
+  }
+
+  /**
+   * Checks if the song was posted directly previous to the last one.
+   */
+  public boolean isSongRepost(Song currentSong) {
+    String lastPostedSongId = mSongLastPosted.getString(SONG_LAST_POSTED_ID_KEY, null);
+    if (lastPostedSongId == null) {
+      return false;
+    }
+
+    Song lastSong = getSong(lastPostedSongId);
+    return currentSong.equals(lastSong);
   }
 
   private static Song getSongFromJsonBody(String songId, String jsonBody) {
