@@ -44,7 +44,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
    * Adds a song to the current list of displayed songs
    */
   public void addSong(Song newSong) {
-
+    mSongData.add(0, newSong);
+    notifyItemChanged(0);
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {

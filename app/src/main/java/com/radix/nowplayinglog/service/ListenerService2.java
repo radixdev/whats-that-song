@@ -11,8 +11,8 @@ import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
 
-public class ListenerService extends NotificationListenerService {
-  private static String TAG = ListenerService.class.getName();
+public class ListenerService2 extends NotificationListenerService {
+  private static String TAG = ListenerService2.class.getName();
   private SongStorageThing mSongStorage;
 
   @Override
@@ -45,5 +45,17 @@ public class ListenerService extends NotificationListenerService {
       LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
       Log.d(TAG, "broadcast song");
     }
+  }
+
+  @Override
+  public void onListenerConnected() {
+    super.onListenerConnected();
+    Log.i(TAG, "Connected to listener");
+  }
+
+  @Override
+  public void onListenerDisconnected() {
+    super.onListenerDisconnected();
+    Log.i(TAG, "Disconnected from listener");
   }
 }
