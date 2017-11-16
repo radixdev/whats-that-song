@@ -50,7 +50,7 @@ public class SongListFragment extends Fragment {
     mRecyclerView = rootView.findViewById(R.id.songListRecycler);
     setRecyclerViewLayoutManager();
 
-    mAdapter = new SongListAdapter(mSongStorageThing.getAllSongs());
+    mAdapter = new SongListAdapter(getContext(), mSongStorageThing.getAllSongs());
     mRecyclerView.setAdapter(mAdapter);
 
     return rootView;

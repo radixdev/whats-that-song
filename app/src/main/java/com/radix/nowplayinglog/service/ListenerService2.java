@@ -25,7 +25,6 @@ public class ListenerService2 extends NotificationListenerService {
   public void onNotificationPosted(StatusBarNotification sbn) {
     super.onNotificationPosted(sbn);
 
-    Log.v(TAG, "got notif");
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
       Song song = new Song(notificationTitle, sbn.getPostTime());
@@ -50,12 +49,12 @@ public class ListenerService2 extends NotificationListenerService {
   @Override
   public void onListenerConnected() {
     super.onListenerConnected();
-    Log.i(TAG, "Connected to listener");
+    Log.d(TAG, "Connected to listener");
   }
 
   @Override
   public void onListenerDisconnected() {
     super.onListenerDisconnected();
-    Log.i(TAG, "Disconnected from listener");
+    Log.d(TAG, "Disconnected from listener");
   }
 }

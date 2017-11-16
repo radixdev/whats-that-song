@@ -6,7 +6,6 @@ package com.radix.nowplayinglog.models;
 public class Song {
   private static final String BY_DELIMITER = "by";
 
-
   private final String mTitle;
   private final String mArtist;
   private final long mPostTime;
@@ -27,9 +26,7 @@ public class Song {
     mArtist = notificationTitle.substring(lastByIndex + BY_DELIMITER.length(), notificationTitle.length()).trim();
 
     mPostTime = postTime;
-
     mId = String.valueOf(mPostTime);
-//    mId = String.valueOf(notificationTitle.hashCode());
   }
 
   public Song(String title, String artist, long postTime, String id) {
