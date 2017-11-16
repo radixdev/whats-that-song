@@ -25,6 +25,7 @@ public class ListenerService extends NotificationListenerService {
   public void onNotificationPosted(StatusBarNotification sbn) {
     super.onNotificationPosted(sbn);
 
+    Log.v(TAG, "got notif");
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
       Song song = new Song(notificationTitle, sbn.getPostTime());
