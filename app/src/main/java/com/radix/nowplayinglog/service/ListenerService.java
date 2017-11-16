@@ -31,7 +31,7 @@ public class ListenerService extends NotificationListenerService {
       Log.d(TAG, "current song: " +  song);
 
       if (mSongStorage.isSongRepost(song)) {
-        Log.d(TAG, "current song is a repost, ignoring");
+        Log.d(TAG, "current song is a repeat, ignoring");
         return;
       }
 
@@ -42,7 +42,7 @@ public class ListenerService extends NotificationListenerService {
       Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);
       caughtSongIntent.putExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID, song.getId());
       LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
-      Log.d(TAG, "broadcasted out song");
+      Log.d(TAG, "broadcast song");
     }
   }
 }
