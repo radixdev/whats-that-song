@@ -26,7 +26,6 @@ public class ListenerService extends NotificationListenerService {
     super.onNotificationPosted(sbn);
 
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
-      Log.d(TAG, "now playing notif posted!");
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
       Song song = new Song(notificationTitle, sbn.getPostTime());
       Log.d(TAG, "current song: " +  song);
