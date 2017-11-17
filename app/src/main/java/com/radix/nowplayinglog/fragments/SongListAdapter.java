@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
@@ -61,6 +63,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         mClickHandlerProvider.getAppropriateHandler().handleClick(mContext, song);
       }
     });
+
+    Glide.with(mContext).load("http://goo.gl/gEgYUd").into(holder.mAlbumArtImage);
   }
 
   @Override
@@ -76,19 +80,21 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   /**
    * Adds a song to the current list of displayed songs
    */
-  public void addSong(Song newSong) {
+  void addSong(Song newSong) {
     mSongData.add(0, newSong);
     notifyItemChanged(0);
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
-    public TextView mTitleTextView;
-    public TextView mArtistTextView;
+  static class ViewHolder extends RecyclerView.ViewHolder {
+    TextView mTitleTextView;
+    TextView mArtistTextView;
+    ImageView mAlbumArtImage;
 
-    public ViewHolder(View v) {
+    ViewHolder(View v) {
       super(v);
       mTitleTextView = v.findViewById(R.id.songTitleTextView);
       mArtistTextView = v.findViewById(R.id.songArtistTextView);
+      mAlbumArtImage = v.findViewById(R.id.songAlbumImage);
     }
   }
 }
