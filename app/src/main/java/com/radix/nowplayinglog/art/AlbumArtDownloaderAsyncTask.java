@@ -34,10 +34,13 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   private static final Map<String, Integer> LAST_FM_IMAGE_SIZES = new HashMap<>();
 
   static {
-    LAST_FM_IMAGE_SIZES.put("small", 1);
-    LAST_FM_IMAGE_SIZES.put("medium", 2);
-    LAST_FM_IMAGE_SIZES.put("large", 3);
-    LAST_FM_IMAGE_SIZES.put("extralarge", 4);
+    int sizeRanking = 1;
+    LAST_FM_IMAGE_SIZES.put("",  ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("small", ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("medium", ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("large", ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("mega", ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("extralarge", ++sizeRanking);
   }
 
   public AlbumArtDownloaderAsyncTask(ImageView imageView, Song song, Context context) {
@@ -132,19 +135,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     try {
       JSONArray imageObjects = json.getJSONObject("track").getJSONObject("album").getJSONArray("image");
 
-      // We want the largest, but who knows if it's available!
-      String bestImageUrl = null;
-      int bestSize = 0;
-      for (int i = 0; i < imageObjects.length(); i++) {
-        JSONObject jsonObject = imageObjects.getJSONObject(i);
-        String size = jsonObject.getString("size");
-
-        int sizeScore = LAST_FM_IMAGE_SIZES.get(size);
-        if (sizeScore > bestSize) {
-          bestImageUrl = jsonObject.getString("#text");
-          bestSize = sizeScore;
-        }
-      }
+      String bestImageUrl = getBestImageUrlFromImagesArray(imageObjects);
 
       Log.d(TAG, "Found image url for song " + bestImageUrl);
       return bestImageUrl;
@@ -156,28 +147,36 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   private static String retrieveUrlFromLastFmArtistResponse(JSONObject json) {
     try {
-      JSONArray imageObjects = json.getJSONObject("track").getJSONObject("album").getJSONArray("image");
+      JSONArray imageObjects = json.getJSONObject("artist").getJSONArray("image");
 
-      // We want the largest, but who knows if it's available!
-      String bestImageUrl = null;
-      int bestSize = 0;
-      for (int i = 0; i < imageObjects.length(); i++) {
-        JSONObject jsonObject = imageObjects.getJSONObject(i);
-        String size = jsonObject.getString("size");
+      String bestImageUrl = getBestImageUrlFromImagesArray(imageObjects);
 
-        int sizeScore = LAST_FM_IMAGE_SIZES.get(size);
-        if (sizeScore > bestSize) {
-          bestImageUrl = jsonObject.getString("#text");
-          bestSize = sizeScore;
-        }
-      }
-
-      Log.d(TAG, "Found image url for song " + bestImageUrl);
+      Log.d(TAG, "Found image url for artist " + bestImageUrl);
       return bestImageUrl;
     } catch (Exception e) {
       Log.e(TAG, "Failed to retrieve url from response with json", e);
       return null;
     }
+  }
+
+  private static String getBestImageUrlFromImagesArray(JSONArray imageObjects) throws JSONException {
+    // We want the largest, but who knows if it's available!
+    String bestImageUrl = null;
+    int bestSize = 0;
+    for (int i = 0; i < imageObjects.length(); i++) {
+      JSONObject jsonObject = imageObjects.getJSONObject(i);
+      String size = jsonObject.getString("size");
+
+      int sizeScore = LAST_FM_IMAGE_SIZES.get(size);
+      final String imageUrl = jsonObject.getString("#text");
+      if (sizeScore > bestSize && !imageUrl.trim().equals("")) {
+        bestImageUrl = imageUrl;
+        bestSize = sizeScore;
+        Log.d(TAG, "found best size of " + size);
+      }
+    }
+
+    return bestImageUrl;
   }
 
   private static String getLastFmUrlForSong(Song song, boolean isTrackSearch) {
