@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.radix.nowplayinglog.R;
+import com.radix.nowplayinglog.art.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
@@ -63,8 +64,17 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         mClickHandlerProvider.getAppropriateHandler().handleClick(mContext, song);
       }
     });
+    if (holder.mImageLoaderTask != null) {
+      holder.mImageLoaderTask.cancel(true);
+    }
 
-    Glide.with(mContext).load("http://goo.gl/gEgYUd").into(holder.mAlbumArtImage);
+    Glide.with(mContext)
+        .load("https://ih1.redbubble.net/image.63252269.3457/flat,800x800,075,t.u2.jpg")
+        .into(holder.mAlbumArtImage);
+
+    AlbumArtDownloaderAsyncTask task = new AlbumArtDownloaderAsyncTask(holder.mAlbumArtImage, song, mContext);
+    holder.mImageLoaderTask = task;
+    task.execute();
   }
 
   @Override
@@ -89,6 +99,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     TextView mTitleTextView;
     TextView mArtistTextView;
     ImageView mAlbumArtImage;
+    AlbumArtDownloaderAsyncTask mImageLoaderTask;
 
     ViewHolder(View v) {
       super(v);
