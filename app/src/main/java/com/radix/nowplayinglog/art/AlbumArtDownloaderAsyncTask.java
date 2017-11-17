@@ -2,6 +2,7 @@ package com.radix.nowplayinglog.art;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   private final Context mContext;
   private final ImageView mImageView;
   private final Song mSong;
+  private final SharedPreferences mImageUrlCache;
 
   private static final Map<String, Integer> LAST_FM_IMAGE_SIZES = new HashMap<>();
 
@@ -38,15 +40,16 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     LAST_FM_IMAGE_SIZES.put("",  ++sizeRanking);
     LAST_FM_IMAGE_SIZES.put("small", ++sizeRanking);
     LAST_FM_IMAGE_SIZES.put("medium", ++sizeRanking);
-    LAST_FM_IMAGE_SIZES.put("large", ++sizeRanking);
     LAST_FM_IMAGE_SIZES.put("mega", ++sizeRanking);
     LAST_FM_IMAGE_SIZES.put("extralarge", ++sizeRanking);
+    LAST_FM_IMAGE_SIZES.put("large", ++sizeRanking);
   }
 
   public AlbumArtDownloaderAsyncTask(ImageView imageView, Song song, Context context) {
     mImageView = imageView;
     mSong = song;
     mContext = context;
+    mImageUrlCache = context.getSharedPreferences("lastfm.url.cache", Context.MODE_PRIVATE);
   }
 
   @Override
@@ -54,10 +57,14 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     // Spool up some okhttp and parse the album art out of it
     Log.d(TAG, "Downloading art for song: " + mSong);
 
-    String imageUrl;
+    String imageUrl = getImageUrlFromCache(mSong);
+    if (imageUrl != null) {
+      // wow that was easy
+      Log.d(TAG, "Retrieved url from cache: " + imageUrl);
+      return imageUrl;
+    }
 
     // Try for the track art, then the artist art
-
     final String lastFmUrlForSong = getLastFmUrlForSong(mSong, true);
     Log.d(TAG, "Using url " + lastFmUrlForSong);
     Request request = new Request.Builder()
@@ -77,6 +84,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     imageUrl = retrieveUrlFromLastFmTrackResponse(json);
 
     if (imageUrl != null) {
+      addImageUrlToCache(mSong, imageUrl);
       return imageUrl;
     }
 
@@ -101,16 +109,32 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
     // Now let's parse for the artist pic
     imageUrl = retrieveUrlFromLastFmArtistResponse(json);
-
+    addImageUrlToCache(mSong, imageUrl);
     return imageUrl;
   }
 
   @Override
   protected void onPostExecute(String imageUrl) {
-    // Make sure we don't overwrite any images
-    Glide.with(mContext)
-        .load(imageUrl)
-        .into(mImageView);
+    if (imageUrl != null && !imageUrl.equals("")) {
+      // Make sure we don't overwrite any images
+      Glide.with(mContext)
+          .load(imageUrl)
+          .into(mImageView);
+    }
+  }
+
+  private void addImageUrlToCache(Song song, String url) {
+    SharedPreferences.Editor edit = mImageUrlCache.edit();
+    edit.putString(song.getId(), url);
+    edit.apply();
+  }
+
+  private String getImageUrlFromCache(Song song) {
+    if (mImageUrlCache.contains(song.getId())) {
+      return mImageUrlCache.getString(song.getId(), null);
+    }
+
+    return null;
   }
 
   private static JSONObject getJsonDataFromRequest(Request request) {
@@ -184,15 +208,29 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     // or
     // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
 
+    // "Migos, Nicki Minaj & Cardi B" is fucking tough
+    String artist = song.getArtist();
+    int lastComma = artist.lastIndexOf(",");
+    int lastAmpersand = artist.lastIndexOf("&");
+
+    final int minBadChar = Math.min(lastComma, lastAmpersand);
+    String urlSafeArtist;
+
+    if (minBadChar == -1) {
+      urlSafeArtist = artist;
+    } else {
+      urlSafeArtist = artist.substring(0, minBadChar);
+    }
+    String urlSafeTitle = song.getTitle();
     if (isTrackSearch) {
       return "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&format=json" +
           "&api_key=" + Constants.LAST_FM_API_KEY +
-          "&artist=" + song.getArtist() +
-          "&track=" + song.getTitle();
+          "&track=" + urlSafeTitle +
+          "&artist=" + urlSafeArtist;
     } else {
       return "http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&format=json" +
           "&api_key=" + Constants.LAST_FM_API_KEY +
-          "&artist=" + song.getArtist();
+          "&artist=" + urlSafeArtist;
     }
   }
 }
