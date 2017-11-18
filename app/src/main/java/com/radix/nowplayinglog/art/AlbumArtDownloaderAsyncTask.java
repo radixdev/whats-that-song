@@ -89,6 +89,10 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     Log.d(TAG, "Could not find track image, using artist image instead");
+    if (isCancelled()) {
+      Log.d(TAG, "Job was cancelled, stop early");
+      return null;
+    }
 
     // Attempt for the artist image then
     final String lastFmUrlForArtist = getLastFmUrlForSong(mSong, false);
