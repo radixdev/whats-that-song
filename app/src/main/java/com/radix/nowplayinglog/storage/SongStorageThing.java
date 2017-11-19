@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class SongStorageThing {
   private static final String TAG = SongStorageThing.class.getName();
-  private static final String TITLE_KEY = "title";
-  private static final String ARTIST_KEY = "artist";
-  private static final String POST_TIME_KEY = "timestamp";
-  private static final String FAVORITED_KEY = "favorited";
-  private static final String LATITUDE_KEY = "latitude";
-  private static final String LONGITUDE_KEY = "longitude";
+  private static final String TITLE_KEY = "t";
+  private static final String ARTIST_KEY = "a";
+  private static final String POST_TIME_KEY = "ts";
+  private static final String FAVORITED_KEY = "f";
+  private static final String LATITUDE_KEY = "lt";
+  private static final String LONGITUDE_KEY = "lg";
   private static final String SONG_STORAGE_PREFS_LOCATION = "songs.go.here";
 
   private static final String SONG_LAST_POSTED_PREFS_LOCATION = "songs.history";
