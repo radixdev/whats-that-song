@@ -3,6 +3,9 @@
           package="com.radix.nowplayinglog">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".service.ListenerService2"
+            android:name=".service.ListenerService"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:label="@string/app_name">
             <intent-filter>

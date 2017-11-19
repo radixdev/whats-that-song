@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     mViewPager = findViewById(R.id.viewPager);
     mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
+    mViewPager.setCurrentItem(1);
 
     BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(this);
@@ -31,20 +33,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.navigation_home:
+      case R.id.navigation_map:
+        mViewPager.setCurrentItem(0);
         return true;
-      case R.id.navigation_dashboard:
-        return true;
-      case R.id.navigation_notifications:
+      case R.id.navigation_all_songs:
+      mViewPager.setCurrentItem(1);
+      return true;
+      case R.id.navigation_settings:
+        mViewPager.setCurrentItem(2);
         return true;
     }
     return false;
   }
 
-  /**
-   * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-   * sequence.
-   */
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     public ScreenSlidePagerAdapter(FragmentManager fm) {
       super(fm);
@@ -52,7 +53,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public Fragment getItem(int position) {
-      return new SongListFragment();
+      switch (position) {
+        case 0:
+          // Return a map here!
+          return new SongListFragment();
+
+        case 1:
+          return new SongListFragment();
+
+        case 2:
+          return new SettingsFragment();
+      }
+
+      return null;
     }
 
     @Override

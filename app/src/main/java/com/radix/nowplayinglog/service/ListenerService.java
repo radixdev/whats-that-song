@@ -11,8 +11,8 @@ import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
 
-public class ListenerService2 extends NotificationListenerService {
-  private static String TAG = ListenerService2.class.getName();
+public class ListenerService extends NotificationListenerService {
+  private static String TAG = ListenerService.class.getName();
   private SongStorageThing mSongStorage;
 
   @Override

@@ -48,7 +48,6 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    // Create a new view.
     View v = LayoutInflater.from(parent.getContext())
         .inflate(R.layout.song_item, parent, false);
 
@@ -76,8 +75,6 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         song.setFavorited(!song.getIsFavorited());
         favoriteButton.setSelected(song.getIsFavorited());
         mSongStorage.storeSong(song);
-
-//        notifyItemChanged(holder.getAdapterPosition());
       }
     });
 

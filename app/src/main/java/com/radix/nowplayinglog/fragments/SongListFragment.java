@@ -56,11 +56,6 @@ public class SongListFragment extends Fragment {
     return rootView;
   }
 
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-  }
-
   private void setRecyclerViewLayoutManager() {
     int scrollPosition = 0;
 
