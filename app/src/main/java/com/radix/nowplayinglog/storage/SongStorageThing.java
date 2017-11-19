@@ -30,6 +30,8 @@ public class SongStorageThing {
   public SongStorageThing(Context context) {
     mSongStore = context.getSharedPreferences(SONG_STORAGE_PREFS_LOCATION, Context.MODE_PRIVATE);
     mSongLastPosted = context.getSharedPreferences(SONG_LAST_POSTED_PREFS_LOCATION, Context.MODE_PRIVATE);
+
+    correctAllSongsInStorage();
   }
 
   public List<Song> getAllSongs() {
@@ -47,8 +49,6 @@ public class SongStorageThing {
 
   /**
    * Stores or updates a song
-   *
-   * @param song
    */
   public void storeSong(Song song) {
     JSONObject songObject = new JSONObject();
@@ -104,5 +104,31 @@ public class SongStorageThing {
       Log.e(TAG, "Failed to retrieve song from storage: " + jsonBody, e);
     }
     return null;
+  }
+
+  /**
+   * Adds any missing values for any song in storage
+   */
+  private void correctAllSongsInStorage() {
+    final Map<String, ?> allSongs = mSongStore.getAll();
+    for (Map.Entry songEntry : allSongs.entrySet()) {
+      String songId = (String) songEntry.getKey();
+
+      // Default any values that are needed
+      final String songEntryValue = (String) songEntry.getValue();
+      try {
+        JSONObject songJson = new JSONObject(songEntryValue);
+
+        if (!songJson.has(FAVORITED_KEY)) {
+          songJson.put(FAVORITED_KEY, false);
+        }
+        SharedPreferences.Editor editor = mSongStore.edit();
+        editor.putString(songId, songJson.toString());
+        editor.apply();
+      } catch (JSONException e) {
+        Log.e(TAG, "Failed to correct song to in storage: " + songEntryValue, e);
+      }
+
+    }
   }
 }

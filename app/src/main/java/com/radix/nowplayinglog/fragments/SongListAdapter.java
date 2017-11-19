@@ -56,7 +56,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   }
 
   @Override
-  public void onBindViewHolder(ViewHolder holder, int position) {
+  public void onBindViewHolder(final ViewHolder holder, int position) {
     final Song song = mSongData.get(position);
     holder.mArtistTextView.setText(song.getArtist());
     holder.mTitleTextView.setText(song.getTitle());
@@ -73,10 +73,11 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     favoriteButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        final boolean selected = favoriteButton.isSelected();
-        favoriteButton.setSelected(!selected);
-        song.setFavorited(!selected);
+        song.setFavorited(!song.getIsFavorited());
+        favoriteButton.setSelected(song.getIsFavorited());
         mSongStorage.storeSong(song);
+
+//        notifyItemChanged(holder.getAdapterPosition());
       }
     });
 
