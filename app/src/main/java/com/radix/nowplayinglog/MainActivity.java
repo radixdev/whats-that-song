@@ -26,8 +26,34 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
     mViewPager.setCurrentItem(1);
 
-    BottomNavigationView navigation = findViewById(R.id.navigation);
+    final BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(this);
+    navigation.setSelectedItemId(R.id.navigation_all_songs);
+
+    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageSelected(int position) {
+        switch (position) {
+          case 0:
+            navigation.setSelectedItemId(R.id.navigation_map);
+            break;
+
+          case 1:
+            navigation.setSelectedItemId(R.id.navigation_all_songs);
+            break;
+
+          case 2:
+            navigation.setSelectedItemId(R.id.navigation_settings);
+            break;
+        }
+      }
+
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+      @Override
+      public void onPageScrollStateChanged(int state) {}
+    });
   }
 
   @Override
@@ -37,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mViewPager.setCurrentItem(0);
         return true;
       case R.id.navigation_all_songs:
-      mViewPager.setCurrentItem(1);
-      return true;
+        mViewPager.setCurrentItem(1);
+        return true;
       case R.id.navigation_settings:
         mViewPager.setCurrentItem(2);
         return true;
@@ -47,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
   }
 
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-    public ScreenSlidePagerAdapter(FragmentManager fm) {
+    ScreenSlidePagerAdapter(FragmentManager fm) {
       super(fm);
     }
 
