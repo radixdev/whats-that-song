@@ -119,8 +119,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   @Override
   protected void onPostExecute(String imageUrl) {
-    if (imageUrl != null && !imageUrl.equals("")) {
-      // Make sure we don't overwrite any images
+    if (imageUrl != null && !imageUrl.equals("") && !isCancelled()) {
       Glide.with(mContext)
           .load(imageUrl)
           .into(mImageView);

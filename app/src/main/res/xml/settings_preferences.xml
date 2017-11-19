@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="popular"
-        android:entries="@array/categories"
-        android:entryValues="@array/categories_value"
-        android:summary="Select categories of movies"
-        android:title="Categories"
-        android:key="@string/movies_categories_key" />
+    <PreferenceCategory
+        android:title="@string/settings_general_title"
+        android:key="pref_key_storage_settings">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_map_black_48dp"
+            android:key="@string/settings_map_key"
+            android:summary="@string/settings_map_enabled_summary"
+            android:summaryOff="@string/settings_map_disabled_summary"
+            android:summaryOn="@string/settings_map_enabled_summary"
+            android:title="@string/settings_map_title"/>
+    </PreferenceCategory>
 </PreferenceScreen>

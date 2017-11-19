@@ -1,5 +1,7 @@
 package com.radix.nowplayinglog;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,9 +11,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
+import com.radix.nowplayinglog.util.Constants;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -24,11 +28,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     mViewPager = findViewById(R.id.viewPager);
     mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
-    mViewPager.setCurrentItem(1);
 
     final BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(this);
-    navigation.setSelectedItemId(R.id.navigation_all_songs);
+//    navigation.setSelectedItemId(R.id.navigation_all_songs);
+    navigation.setSelectedItemId(R.id.navigation_settings);
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -97,6 +101,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public int getCount() {
       return 3;
+    }
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    // Make sure it's our original READ_CONTACTS request
+    if (requestCode == Constants.READ_LOCATION_PERMISSIONS_REQUEST) {
+      if (grantResults.length == 1 &&
+          grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        Toast.makeText(this, "Read Location permission granted", Toast.LENGTH_SHORT).show();
+      } else {
+        // showRationale = false if user clicks Never Ask Again, otherwise true
+        boolean showRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (showRationale) {
+          // do something here to handle degraded mode
+        } else {
+          Toast.makeText(this, "Read Location permission denied", Toast.LENGTH_SHORT).show();
+        }
+      }
+    } else {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
   }
 }
