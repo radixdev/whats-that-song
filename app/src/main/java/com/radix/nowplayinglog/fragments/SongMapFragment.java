@@ -18,6 +18,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -109,9 +111,12 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     LatLng songPosition = new LatLng(song.getLatitude(), song.getLongitude());
+    BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_music_note_white_48dp);
+
     mMap.addMarker(new MarkerOptions()
         .position(songPosition)
         .title(song.getTitleAndArtistForDisplay())
+        .icon(bitmapDescriptor)
     );
   }
 }
