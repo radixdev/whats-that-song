@@ -1,36 +1,65 @@
 package com.radix.nowplayinglog.fragments;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.radix.nowplayinglog.R;
 
-public class SettingsFragment extends Fragment {
-
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+  private static final String TAG = SettingsFragment.class.getSimpleName();
   // Identifier for the permission request
   private static final int READ_LOCATION_PERMISSIONS_REQUEST = 1;
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  SharedPreferences sharedPreferences;
 
-    getPermissionToReadLocation();
+  @Override
+  public void onCreatePreferences(Bundle bundle, String s) {
+    //add xml
+    addPreferencesFromResource(R.xml.settings_preferences);
+
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+    onSharedPreferenceChanged(sharedPreferences, getString(R.string.movies_categories_key));
+  }
+
+
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    Preference preference = findPreference(key);
+    if (preference instanceof ListPreference) {
+      ListPreference listPreference = (ListPreference) preference;
+      int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
+      if (prefIndex >= 0) {
+        preference.setSummary(listPreference.getEntries()[prefIndex]);
+      }
+    } else {
+      preference.setSummary(sharedPreferences.getString(key, ""));
+    }
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_settings, container, false);
+  public void onResume() {
+    super.onResume();
+    //unregister the preferenceChange listener
+    getPreferenceScreen().getSharedPreferences()
+        .registerOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    //unregister the preference change listener
+    getPreferenceScreen().getSharedPreferences()
+        .unregisterOnSharedPreferenceChangeListener(this);
   }
 
   public void getPermissionToReadLocation() {
@@ -45,9 +74,7 @@ public class SettingsFragment extends Fragment {
 
   // Callback with the request from calling requestPermissions(...)
   @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         @NonNull String permissions[],
-                                         @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
     // Make sure it's our original READ_CONTACTS request
     if (requestCode == READ_LOCATION_PERMISSIONS_REQUEST) {
       if (grantResults.length == 1 &&

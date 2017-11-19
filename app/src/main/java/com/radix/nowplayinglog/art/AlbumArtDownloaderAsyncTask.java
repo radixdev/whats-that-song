@@ -55,12 +55,12 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   @Override
   protected String doInBackground(Void... voids) {
     // Spool up some okhttp and parse the album art out of it
-    Log.d(TAG, "Downloading art for song: " + mSong);
+    Log.v(TAG, "Downloading art for song: " + mSong);
 
     String imageUrl = getImageUrlFromCache(mSong);
     if (imageUrl != null) {
       // wow that was easy
-      Log.d(TAG, "Retrieved url from cache: " + imageUrl);
+      Log.v(TAG, "Retrieved url from cache: " + imageUrl);
       return imageUrl;
     }
 
