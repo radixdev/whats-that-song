@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
@@ -29,17 +30,21 @@ import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.SongSorter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   private static final String TAG = SongMapFragment.class.getName();
 
   private GoogleMap mMap;
   private SongStorageThing mSongStorageThing;
+  private Map<String, Marker> mSongIdToMarkerMap;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mSongIdToMarkerMap = new HashMap<>();
     mSongStorageThing = new SongStorageThing(getContext());
 
     LocalBroadcastManager.getInstance(getContext()).registerReceiver(new BroadcastReceiver() {
@@ -72,6 +77,13 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
+    configureMap();
+    showAllSongsOnMap();
+  }
+
+  private void configureMap() {
+    mMap.setBuildingsEnabled(false);
+
     try {
       // Customise the styling of the base map using a JSON object defined
       // in a raw resource file.
@@ -85,7 +97,20 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
     } catch (Resources.NotFoundException e) {
       Log.e(TAG, "Can't find style. Error: ", e);
     }
+  }
 
+  public void centerMapOnSong(Song song) {
+    LatLng songPos = new LatLng(song.getLatitude(), song.getLongitude());
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(songPos, 16));
+
+    // Show the info for the marker too
+    Marker existingMarker = mSongIdToMarkerMap.get(song.getId());
+    if (existingMarker != null) {
+      existingMarker.showInfoWindow();
+    }
+  }
+
+  private void showAllSongsOnMap() {
     // Add all the known songs to the map
     List<Song> allSongs = mSongStorageThing.getAllSongs();
     if (allSongs.isEmpty()) {
@@ -110,13 +135,19 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
       return;
     }
 
+    if (mSongIdToMarkerMap.containsKey(song.getId())) {
+      Log.d(TAG, "Song already exists on map. Not adding duplicate: " + song);
+      return;
+    }
+
     LatLng songPosition = new LatLng(song.getLatitude(), song.getLongitude());
     BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_music_note_white_48dp);
 
-    mMap.addMarker(new MarkerOptions()
+    final Marker marker = mMap.addMarker(new MarkerOptions()
         .position(songPosition)
         .title(song.getTitleAndArtistForDisplay())
-        .icon(bitmapDescriptor)
-    );
+        .icon(bitmapDescriptor));
+
+    mSongIdToMarkerMap.put(song.getId(), marker);
   }
 }

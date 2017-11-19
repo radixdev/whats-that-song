@@ -25,7 +25,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   private final SongStorageThing mSongStorage;
   private final SongListFragment.OnSongMapIconPressedListener mSongClickCallback;
 
-  public SongListAdapter(Context context, List<Song> songData,
+  SongListAdapter(Context context, List<Song> songData,
                          SongStorageThing songStorage, SongListFragment.OnSongMapIconPressedListener songClickCallback) {
     mContext = context.getApplicationContext();
     mSongData = songData;

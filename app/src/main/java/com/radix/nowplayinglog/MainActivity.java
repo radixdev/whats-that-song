@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
   private static final String TAG = MainActivity.class.getName();
 
   private ViewPager mViewPager;
+  private BottomNavigationView mBottomNavigation;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,9 @@ public class MainActivity extends AppCompatActivity
     mViewPager = findViewById(R.id.viewPager);
     mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
 
-    final BottomNavigationView navigation = findViewById(R.id.navigation);
-    navigation.setOnNavigationItemSelectedListener(this);
-    navigation.setSelectedItemId(R.id.navigation_all_songs);
+    mBottomNavigation = findViewById(R.id.navigation);
+    mBottomNavigation.setOnNavigationItemSelectedListener(this);
+    mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
 //    navigation.setSelectedItemId(R.id.navigation_settings);
 //    navigation.setSelectedItemId(R.id.navigation_map);
 
@@ -49,15 +50,15 @@ public class MainActivity extends AppCompatActivity
       public void onPageSelected(int position) {
         switch (position) {
           case 0:
-            navigation.setSelectedItemId(R.id.navigation_map);
+            mBottomNavigation.setSelectedItemId(R.id.navigation_map);
             break;
 
           case 1:
-            navigation.setSelectedItemId(R.id.navigation_all_songs);
+            mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
             break;
 
           case 2:
-            navigation.setSelectedItemId(R.id.navigation_settings);
+            mBottomNavigation.setSelectedItemId(R.id.navigation_settings);
             break;
         }
       }
@@ -95,9 +96,18 @@ public class MainActivity extends AppCompatActivity
   public void onSongMapClicked(Song song) {
     // Tell the map fragment to open the song on the map
     Log.d(TAG, "Got a click " + song);
+
+    mBottomNavigation.setSelectedItemId(R.id.navigation_map);
+
+    SongMapFragment songMapFragment = ((ScreenSlidePagerAdapter) (mViewPager.getAdapter())).getMapFragment();
+    if (songMapFragment != null) {
+      songMapFragment.centerMapOnSong(song);
+    }
   }
 
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+    private SongMapFragment mMapFragment;
+
     ScreenSlidePagerAdapter(FragmentManager fm) {
       super(fm);
     }
@@ -106,7 +116,8 @@ public class MainActivity extends AppCompatActivity
     public Fragment getItem(int position) {
       switch (position) {
         case 0:
-          return new SongMapFragment();
+          mMapFragment = new SongMapFragment();
+          return mMapFragment;
 
         case 1:
           return new SongListFragment();
@@ -121,6 +132,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public int getCount() {
       return 3;
+    }
+
+    SongMapFragment getMapFragment() {
+      return mMapFragment;
     }
   }
 
