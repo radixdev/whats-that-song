@@ -19,6 +19,13 @@ import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
 
 public class SongListFragment extends Fragment {
+
+  public interface OnSongMapIconPressedListener {
+    void onSongMapClicked(Song song);
+  }
+
+  private OnSongMapIconPressedListener mSongClickCallback;
+
   private RecyclerView mRecyclerView;
   private SongStorageThing mSongStorageThing;
   private SongListAdapter mAdapter;
@@ -43,6 +50,20 @@ public class SongListFragment extends Fragment {
   }
 
   @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+    // This makes sure that the container activity has implemented
+    // the callback interface. If not, it throws an exception
+    try {
+      mSongClickCallback = (OnSongMapIconPressedListener) getActivity();
+    } catch (ClassCastException e) {
+      throw new ClassCastException(getActivity().toString()
+          + " must implement OnSongMapIconPressedListener");
+    }
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
@@ -50,7 +71,7 @@ public class SongListFragment extends Fragment {
     mRecyclerView = rootView.findViewById(R.id.songListRecycler);
     setRecyclerViewLayoutManager();
 
-    mAdapter = new SongListAdapter(getContext(), mSongStorageThing.getAllSongs(), mSongStorageThing);
+    mAdapter = new SongListAdapter(getContext(), mSongStorageThing.getAllSongs(), mSongStorageThing, mSongClickCallback);
     mRecyclerView.setAdapter(mAdapter);
 
     return rootView;

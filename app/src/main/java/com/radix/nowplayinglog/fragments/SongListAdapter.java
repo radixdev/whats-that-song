@@ -19,17 +19,19 @@ import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 import java.util.List;
 
 public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> {
-
   private final List<Song> mSongData;
   private final ClickHandlerProvider mClickHandlerProvider;
   private final Context mContext;
   private final SongStorageThing mSongStorage;
+  private final SongListFragment.OnSongMapIconPressedListener mSongClickCallback;
 
-  public SongListAdapter(Context context, List<Song> songData, SongStorageThing songStorage) {
+  public SongListAdapter(Context context, List<Song> songData,
+                         SongStorageThing songStorage, SongListFragment.OnSongMapIconPressedListener songClickCallback) {
     mContext = context.getApplicationContext();
     mSongData = songData;
     mSongStorage = songStorage;
     mClickHandlerProvider = new ClickHandlerProvider();
+    mSongClickCallback = songClickCallback;
 
     SongSorter.sortSongs(mSongData);
 
@@ -67,6 +69,20 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         mSongStorage.storeSong(song);
       }
     });
+
+    // Hide the map icon if needed
+    if (song.hasLocationSet()) {
+      holder.mMapIconButton.setVisibility(View.VISIBLE);
+      holder.mMapIconButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          mSongClickCallback.onSongMapClicked(song);
+        }
+      });
+    } else {
+      holder.mMapIconButton.setVisibility(View.GONE);
+    }
+
 
     if (holder.mSong == null || !holder.mSong.equals(song)) {
       // Need to redraw the song
@@ -126,6 +142,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     AlbumArtDownloaderAsyncTask mImageLoaderTask;
 
     ImageButton mFavoriteButton;
+    ImageButton mMapIconButton;
 
     ViewHolder(View v) {
       super(v);
@@ -133,6 +150,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       mArtistTextView = v.findViewById(R.id.songArtistTextView);
       mAlbumArtImage = v.findViewById(R.id.songAlbumImage);
       mFavoriteButton = v.findViewById(R.id.imageButtonFavorite);
+      mMapIconButton = v.findViewById(R.id.imageButtonMap);
     }
   }
 }
