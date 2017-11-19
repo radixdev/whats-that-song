@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
@@ -68,6 +70,20 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
+    try {
+      // Customise the styling of the base map using a JSON object defined
+      // in a raw resource file.
+      boolean success = mMap.setMapStyle(
+          MapStyleOptions.loadRawResourceStyle(
+              getContext(), R.raw.map_style_json));
+
+      if (!success) {
+        Log.e(TAG, "Style parsing failed.");
+      }
+    } catch (Resources.NotFoundException e) {
+      Log.e(TAG, "Can't find style. Error: ", e);
+    }
+
     // Add all the known songs to the map
     List<Song> allSongs = mSongStorageThing.getAllSongs();
     if (allSongs.isEmpty()) {
@@ -93,6 +109,9 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     LatLng songPosition = new LatLng(song.getLatitude(), song.getLongitude());
-    mMap.addMarker(new MarkerOptions().position(songPosition).title(song.getTitleAndArtistForDisplay()));
+    mMap.addMarker(new MarkerOptions()
+        .position(songPosition)
+        .title(song.getTitleAndArtistForDisplay())
+    );
   }
 }
