@@ -20,7 +20,7 @@ import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
-import com.radix.nowplayinglog.util.LocationUtils;
+import com.radix.nowplayinglog.util.PermissionUtils;
 
 public class ListenerServiceTb extends NotificationListenerService {
   private static String TAG = ListenerServiceTb.class.getName();
@@ -69,7 +69,7 @@ public class ListenerServiceTb extends NotificationListenerService {
         .getDefaultSharedPreferences(getApplicationContext())
         .getBoolean(getApplicationContext().getString(R.string.settings_map_key), false);
 
-    boolean isLocationPermissionGranted = LocationUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+    boolean isLocationPermissionGranted = PermissionUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
     if (isLocationPermissionGranted && isLocationCollectionSettingEnabled) {
       FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
       @SuppressLint("MissingPermission") final Task<Location> lastLocationTask = locationClient.getLastLocation();
@@ -102,5 +102,15 @@ public class ListenerServiceTb extends NotificationListenerService {
   public void onListenerDisconnected() {
     super.onListenerDisconnected();
     Log.d(TAG, "Disconnected from listener");
+  }
+
+  private boolean shouldCollectLocation() {
+    boolean isLocationCollectionSettingEnabled = PreferenceManager
+        .getDefaultSharedPreferences(getApplicationContext())
+        .getBoolean(getApplicationContext().getString(R.string.settings_map_key), false);
+
+    boolean isLocationPermissionGranted = PermissionUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+    return isLocationCollectionSettingEnabled && isLocationPermissionGranted;
   }
 }

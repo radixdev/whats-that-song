@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
 import com.radix.nowplayinglog.util.Constants;
-import com.radix.nowplayinglog.util.LocationUtils;
+import com.radix.nowplayinglog.util.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
       public void onPageScrollStateChanged(int state) {}
     });
 
-    if (!LocationUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)) {
+    if (!PermissionUtils.isNotificationListenerEnabled(this)) {
       // TODO: 11/18/2017 show a dialog window here instead of just jumping straight there
       startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0);
     }

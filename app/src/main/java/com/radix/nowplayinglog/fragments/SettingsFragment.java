@@ -10,7 +10,7 @@ import android.support.v7.preference.PreferenceManager;
 
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.util.Constants;
-import com.radix.nowplayinglog.util.LocationUtils;
+import com.radix.nowplayinglog.util.PermissionUtils;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
   private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -56,7 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
   }
 
   public void getPermissionToReadLocation() {
-    if (!LocationUtils.isPermissionGranted(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+    if (!PermissionUtils.isPermissionGranted(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
       // Fire off an async request to actually get the permission
       requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
           Constants.READ_LOCATION_PERMISSIONS_REQUEST);
