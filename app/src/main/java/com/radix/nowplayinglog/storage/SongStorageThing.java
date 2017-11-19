@@ -19,6 +19,8 @@ public class SongStorageThing {
   private static final String ARTIST_KEY = "artist";
   private static final String POST_TIME_KEY = "timestamp";
   private static final String FAVORITED_KEY = "favorited";
+  private static final String LATITUDE_KEY = "latitude";
+  private static final String LONGITUDE_KEY = "longitude";
   private static final String SONG_STORAGE_PREFS_LOCATION = "songs.go.here";
 
   private static final String SONG_LAST_POSTED_PREFS_LOCATION = "songs.history";
@@ -58,6 +60,8 @@ public class SongStorageThing {
       songObject.put(ARTIST_KEY, song.getArtist());
       songObject.put(POST_TIME_KEY, song.getPostTime());
       songObject.put(FAVORITED_KEY, song.getIsFavorited());
+      songObject.put(LATITUDE_KEY, song.getLatitude());
+      songObject.put(LONGITUDE_KEY, song.getLongitude());
     } catch (JSONException e) {
       Log.e(TAG, "Failed to add song to storage: " + song, e);
     }
@@ -97,9 +101,9 @@ public class SongStorageThing {
   private static Song getSongFromJsonBody(String songId, String jsonBody) {
     try {
       JSONObject songJson = new JSONObject(jsonBody);
-      // TODO: 11/18/2017 update the favorited to be a getter ;)
       return new Song(songId, songJson.getString(TITLE_KEY), songJson.getString(ARTIST_KEY),
-          songJson.getLong(POST_TIME_KEY), songJson.optBoolean(FAVORITED_KEY, false), -1, -1);
+          songJson.getLong(POST_TIME_KEY), songJson.getBoolean(FAVORITED_KEY),
+          songJson.getDouble(LATITUDE_KEY), songJson.getDouble(LONGITUDE_KEY));
     } catch (JSONException e) {
       Log.e(TAG, "Failed to retrieve song from storage: " + jsonBody, e);
     }
@@ -122,6 +126,13 @@ public class SongStorageThing {
         if (!songJson.has(FAVORITED_KEY)) {
           songJson.put(FAVORITED_KEY, false);
         }
+        if (!songJson.has(LATITUDE_KEY)) {
+          songJson.put(LATITUDE_KEY, -1d);
+        }
+        if (!songJson.has(LONGITUDE_KEY)) {
+          songJson.put(LONGITUDE_KEY, -1d);
+        }
+
         SharedPreferences.Editor editor = mSongStore.edit();
         editor.putString(songId, songJson.toString());
         editor.apply();
