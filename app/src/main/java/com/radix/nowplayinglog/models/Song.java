@@ -1,10 +1,13 @@
 package com.radix.nowplayinglog.models;
 
+import android.location.Location;
+
 /**
  * The song object
  */
 public class Song {
   private static final String BY_DELIMITER = "by";
+  private static final double LOCATION_DEFAULT_VALUE = -1d;
 
   private final String mTitle;
   private final String mArtist;
@@ -15,15 +18,16 @@ public class Song {
   private final String mId;
   private boolean mIsFavorited;
 
-  private double mLatitude;
-  private double mLongitude;
+  private final double mLatitude;
+  private final double mLongitude;
 
   /**
    * Parses the title and artist from the notification
    *
    * @param notificationTitle the title straight from the notification itself
+   * @param heardAtLocation
    */
-  public Song(String notificationTitle, long postTime){
+  public Song(String notificationTitle, long postTime, Location heardAtLocation){
     // Don't want songs with "by" in the title to fuck it up
     int lastByIndex = notificationTitle.lastIndexOf(BY_DELIMITER);
     mTitle = notificationTitle.substring(0, lastByIndex).trim();
@@ -32,14 +36,25 @@ public class Song {
     mPostTime = postTime;
     mId = String.valueOf(mPostTime);
     mIsFavorited = false;
+
+    if (heardAtLocation != null) {
+      mLatitude = heardAtLocation.getLatitude();
+      mLongitude = heardAtLocation.getLongitude();
+    } else {
+      mLatitude = LOCATION_DEFAULT_VALUE;
+      mLongitude = LOCATION_DEFAULT_VALUE;
+    }
   }
 
-  public Song(String id, String title, String artist, long postTime, boolean isFavorited) {
+  public Song(String id, String title, String artist, long postTime, boolean isFavorited, double latitude, double longitude) {
     mTitle = title;
     mArtist = artist;
     mPostTime = postTime;
     mId = id;
     mIsFavorited = isFavorited;
+
+    mLatitude = latitude;
+    mLongitude = longitude;
   }
 
   public String getId() {
@@ -66,6 +81,18 @@ public class Song {
     mIsFavorited = favorited;
   }
 
+  public double getLatitude() {
+    return mLatitude;
+  }
+
+  public double getLongitude() {
+    return mLongitude;
+  }
+
+  public boolean hasLocationSet() {
+    return mLatitude != LOCATION_DEFAULT_VALUE && mLongitude != LOCATION_DEFAULT_VALUE;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -87,10 +114,13 @@ public class Song {
   @Override
   public String toString() {
     return "Song{" +
-        "title='" + mTitle + '\'' +
-        ", artist='" + mArtist + '\'' +
-        ", postTime=" + mPostTime +
-        ", id='" + mId + '\'' +
+        "mTitle='" + mTitle + '\'' +
+        ", mArtist='" + mArtist + '\'' +
+        ", mPostTime=" + mPostTime +
+        ", mId='" + mId + '\'' +
+        ", mIsFavorited=" + mIsFavorited +
+        ", mLatitude=" + mLatitude +
+        ", mLongitude=" + mLongitude +
         '}';
   }
 }

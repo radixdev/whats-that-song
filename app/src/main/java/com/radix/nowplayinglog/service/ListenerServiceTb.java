@@ -42,7 +42,7 @@ public class ListenerServiceTb extends NotificationListenerService {
 
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
-      Song song = new Song(notificationTitle, sbn.getPostTime());
+      Song song = new Song(notificationTitle, sbn.getPostTime(), null);
       Log.d(TAG, "current song: " +  song);
 
       if (mSongStorage.isSongRepost(song)) {
