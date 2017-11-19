@@ -13,6 +13,7 @@ public class Song {
    * A unique id for this song.
    */
   private final String mId;
+  private boolean mIsFavorited;
 
   /**
    * Parses the title and artist from the notification
@@ -27,13 +28,15 @@ public class Song {
 
     mPostTime = postTime;
     mId = String.valueOf(mPostTime);
+    mIsFavorited = false;
   }
 
-  public Song(String title, String artist, long postTime, String id) {
+  public Song(String title, String artist, long postTime, String id, boolean isFavorited) {
     mTitle = title;
     mArtist = artist;
     mPostTime = postTime;
     mId = id;
+    mIsFavorited = isFavorited;
   }
 
   public String getId() {
@@ -50,6 +53,14 @@ public class Song {
 
   public long getPostTime() {
     return mPostTime;
+  }
+
+  public boolean isFavorited() {
+    return mIsFavorited;
+  }
+
+  public void setFavorited(boolean favorited) {
+    mIsFavorited = favorited;
   }
 
   @Override

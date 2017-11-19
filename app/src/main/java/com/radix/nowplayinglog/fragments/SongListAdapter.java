@@ -5,12 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.art.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.models.Song;
+import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
 import java.util.Collections;
@@ -22,10 +24,12 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   private final List<Song> mSongData;
   private final ClickHandlerProvider mClickHandlerProvider;
   private final Context mContext;
+  private final SongStorageThing mSongStorage;
 
-  public SongListAdapter(Context context, List<Song> songData) {
+  public SongListAdapter(Context context, List<Song> songData, SongStorageThing songStorage) {
     mContext = context.getApplicationContext();
     mSongData = songData;
+    mSongStorage = songStorage;
     mClickHandlerProvider = new ClickHandlerProvider();
 
     Collections.sort(mSongData, new Comparator<Song>() {
@@ -63,6 +67,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         mClickHandlerProvider.getAppropriateHandler().handleClick(mContext, song);
       }
     });
+
+
 
     if (holder.mAlbumArtImage != null) {
       holder.mAlbumArtImage.setImageBitmap(null);
@@ -114,11 +120,14 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     ImageView mAlbumArtImage;
     AlbumArtDownloaderAsyncTask mImageLoaderTask;
 
+    ImageButton mFavoriteButton;
+
     ViewHolder(View v) {
       super(v);
       mTitleTextView = v.findViewById(R.id.songTitleTextView);
       mArtistTextView = v.findViewById(R.id.songArtistTextView);
       mAlbumArtImage = v.findViewById(R.id.songAlbumImage);
+      mFavoriteButton = v.findViewById(R.id.imageButtonFavorite);
     }
   }
 }

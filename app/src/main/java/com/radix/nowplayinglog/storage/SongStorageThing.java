@@ -91,7 +91,7 @@ public class SongStorageThing {
     try {
       JSONObject songJson = new JSONObject(jsonBody);
       return new Song(songJson.getString(TITLE_KEY), songJson.getString(ARTIST_KEY),
-          songJson.getLong(POST_TIME_KEY), songId);
+          songJson.getLong(POST_TIME_KEY), songId, );
     } catch (JSONException e) {
       Log.e(TAG, "Failed to retrieve song from storage: " + jsonBody, e);
     }
