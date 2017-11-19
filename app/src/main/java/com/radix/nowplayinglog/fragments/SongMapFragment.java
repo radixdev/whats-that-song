@@ -1,7 +1,14 @@
 package com.radix.nowplayinglog.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +20,36 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.radix.nowplayinglog.R;
+import com.radix.nowplayinglog.models.Song;
+import com.radix.nowplayinglog.storage.SongStorageThing;
+import com.radix.nowplayinglog.util.Constants;
+import com.radix.nowplayinglog.util.SongSorter;
+
+import java.util.List;
 
 public class SongMapFragment extends Fragment implements OnMapReadyCallback {
+  private static final String TAG = SongMapFragment.class.getName();
+
   private GoogleMap mMap;
+  private SongStorageThing mSongStorageThing;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSongStorageThing = new SongStorageThing(getContext());
+
+    LocalBroadcastManager.getInstance(getContext()).registerReceiver(new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        // Get the song id
+        String id = intent.getStringExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID);
+        Song song = mSongStorageThing.getSong(id);
+        if (song != null && song.hasLocationSet() && mMap != null) {
+          addSongToMap(song);
+        }
+      }
+    }, new IntentFilter(Constants.NEW_SONG_BROADCAST_FILTER));
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,22 +64,35 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
     return rootView;
   }
 
-  /**
-   * Manipulates the map once available.
-   * This callback is triggered when the map is ready to be used.
-   * This is where we can add markers or lines, add listeners or move the camera. In this case,
-   * we just add a marker near Sydney, Australia.
-   * If Google Play services is not installed on the device, the user will be prompted to install
-   * it inside the SupportMapFragment. This method will only be triggered once the user has
-   * installed Google Play services and returned to the app.
-   */
   @Override
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
-    // Add a marker in Sydney and move the camera
-    LatLng sydney = new LatLng(-34, 151);
-    mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    // Add all the known songs to the map
+    List<Song> allSongs = mSongStorageThing.getAllSongs();
+    if (allSongs.isEmpty()) {
+      Log.i(TAG, "No songs available, returning");
+      return;
+    }
+    SongSorter.sortSongs(allSongs);
+
+    // Add all the markers
+    for (Song song : allSongs) {
+      addSongToMap(song);
+    }
+
+    // Move the camera to the first song in the list
+    Song firstSong = allSongs.get(0);
+    LatLng firstSongPos = new LatLng(firstSong.getLatitude(), firstSong.getLongitude());
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstSongPos, 15));
+  }
+
+  private void addSongToMap(Song song) {
+    if (!song.hasLocationSet()) {
+      return;
+    }
+
+    LatLng songPosition = new LatLng(song.getLatitude(), song.getLongitude());
+    mMap.addMarker(new MarkerOptions().position(songPosition).title(song.getTitleAndArtistForDisplay()));
   }
 }

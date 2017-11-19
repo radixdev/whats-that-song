@@ -74,6 +74,10 @@ public class Song {
     mLongitude = location.getLongitude();
   }
 
+  public String getTitleAndArtistForDisplay() {
+    return mTitle + " by " + mArtist;
+  }
+
   public String getId() {
     return mId;
   }

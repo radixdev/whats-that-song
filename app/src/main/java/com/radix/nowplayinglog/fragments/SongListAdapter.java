@@ -13,10 +13,9 @@ import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.art.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
+import com.radix.nowplayinglog.util.SongSorter;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> {
@@ -32,16 +31,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     mSongStorage = songStorage;
     mClickHandlerProvider = new ClickHandlerProvider();
 
-    Collections.sort(mSongData, new Comparator<Song>() {
-      @Override
-      public int compare(Song song1, Song song2) {
-        if (song1.getPostTime() < song2.getPostTime()) {
-          return 1;
-        } else {
-          return -1;
-        }
-      }
-    });
+    SongSorter.sortSongs(mSongData);
 
     setHasStableIds(true);
   }
