@@ -78,21 +78,26 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       }
     });
 
-    if (holder.mAlbumArtImage != null) {
-      holder.mAlbumArtImage.setImageBitmap(null);
-    }
+    if (holder.mSong == null || !holder.mSong.equals(song)) {
+      // Need to redraw the song
+      if (holder.mAlbumArtImage != null) {
+        holder.mAlbumArtImage.setImageBitmap(null);
+      }
 
-    if (holder.mImageLoaderTask != null) {
-      holder.mImageLoaderTask.cancel(true);
-    }
+      if (holder.mImageLoaderTask != null) {
+        holder.mImageLoaderTask.cancel(true);
+      }
 
 //    Glide.with(mContext)
 //        .load("https://ih1.redbubble.net/image.63252269.3457/flat,800x800,075,t.u2.jpg")
 //        .into(holder.mAlbumArtImage);
 
-    AlbumArtDownloaderAsyncTask task = new AlbumArtDownloaderAsyncTask(holder.mAlbumArtImage, song, mContext);
-    holder.mImageLoaderTask = task;
-    task.execute();
+      AlbumArtDownloaderAsyncTask task = new AlbumArtDownloaderAsyncTask(holder.mAlbumArtImage, song, mContext);
+      holder.mImageLoaderTask = task;
+      task.execute();
+    }
+
+    holder.mSong = song;
   }
 
   @Override
@@ -101,6 +106,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
     if (holder.mImageLoaderTask != null) {
       holder.mImageLoaderTask.cancel(true);
+
     }
   }
 
@@ -123,6 +129,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {
+    Song mSong;
     TextView mTitleTextView;
     TextView mArtistTextView;
     ImageView mAlbumArtImage;

@@ -236,4 +236,19 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
           "&artist=" + urlSafeArtist;
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AlbumArtDownloaderAsyncTask task = (AlbumArtDownloaderAsyncTask) o;
+
+    return mSong.equals(task.mSong);
+  }
+
+  @Override
+  public int hashCode() {
+    return mSong.hashCode();
+  }
 }

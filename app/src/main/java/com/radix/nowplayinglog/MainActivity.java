@@ -1,8 +1,10 @@
 package com.radix.nowplayinglog;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
 import com.radix.nowplayinglog.util.Constants;
+import com.radix.nowplayinglog.util.LocationUtils;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -31,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     final BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(this);
-//    navigation.setSelectedItemId(R.id.navigation_all_songs);
-    navigation.setSelectedItemId(R.id.navigation_settings);
+    navigation.setSelectedItemId(R.id.navigation_all_songs);
+//    navigation.setSelectedItemId(R.id.navigation_settings);
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -58,6 +61,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
       @Override
       public void onPageScrollStateChanged(int state) {}
     });
+
+    if (!LocationUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)) {
+      // TODO: 11/18/2017 show a dialog window here instead of just jumping straight there
+      startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0);
+    }
   }
 
   @Override

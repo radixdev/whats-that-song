@@ -15,6 +15,9 @@ public class Song {
   private final String mId;
   private boolean mIsFavorited;
 
+  private double mLatitude;
+  private double mLongitude;
+
   /**
    * Parses the title and artist from the notification
    *

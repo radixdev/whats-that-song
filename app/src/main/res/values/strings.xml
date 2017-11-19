@@ -4,9 +4,6 @@
     <string name="title_map">Map</string>
     <string name="title_settings">Settings</string>
 
-    <string name="movies_categories_key">categoriesKey</string>
-    <string name="default_movies_categories">popular</string>
-
     <string name="settings_general_title">General</string>
     <string name="settings_map_key">settings_map_location_checkbox</string>
     <string name="settings_map_title">Where was that song?</string>
