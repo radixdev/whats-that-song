@@ -31,7 +31,7 @@ public class Song {
     mIsFavorited = false;
   }
 
-  public Song(String title, String artist, long postTime, String id, boolean isFavorited) {
+  public Song(String id, String title, String artist, long postTime, boolean isFavorited) {
     mTitle = title;
     mArtist = artist;
     mPostTime = postTime;
@@ -55,7 +55,7 @@ public class Song {
     return mPostTime;
   }
 
-  public boolean isFavorited() {
+  public boolean getIsFavorited() {
     return mIsFavorited;
   }
 

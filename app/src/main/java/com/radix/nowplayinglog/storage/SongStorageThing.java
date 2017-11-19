@@ -18,6 +18,7 @@ public class SongStorageThing {
   private static final String TITLE_KEY = "title";
   private static final String ARTIST_KEY = "artist";
   private static final String POST_TIME_KEY = "timestamp";
+  private static final String FAVORITED_KEY = "favorited";
   private static final String SONG_STORAGE_PREFS_LOCATION = "songs.go.here";
 
   private static final String SONG_LAST_POSTED_PREFS_LOCATION = "songs.history";
@@ -44,6 +45,11 @@ public class SongStorageThing {
     return songs;
   }
 
+  /**
+   * Stores or updates a song
+   *
+   * @param song
+   */
   public void storeSong(Song song) {
     JSONObject songObject = new JSONObject();
 
@@ -51,6 +57,7 @@ public class SongStorageThing {
       songObject.put(TITLE_KEY, song.getTitle());
       songObject.put(ARTIST_KEY, song.getArtist());
       songObject.put(POST_TIME_KEY, song.getPostTime());
+      songObject.put(FAVORITED_KEY, song.getIsFavorited());
     } catch (JSONException e) {
       Log.e(TAG, "Failed to add song to storage: " + song, e);
     }
@@ -90,8 +97,9 @@ public class SongStorageThing {
   private static Song getSongFromJsonBody(String songId, String jsonBody) {
     try {
       JSONObject songJson = new JSONObject(jsonBody);
-      return new Song(songJson.getString(TITLE_KEY), songJson.getString(ARTIST_KEY),
-          songJson.getLong(POST_TIME_KEY), songId, );
+      // TODO: 11/18/2017 update the favorited to be a getter ;)
+      return new Song(songId, songJson.getString(TITLE_KEY), songJson.getString(ARTIST_KEY),
+          songJson.getLong(POST_TIME_KEY), songJson.optBoolean(FAVORITED_KEY, false));
     } catch (JSONException e) {
       Log.e(TAG, "Failed to retrieve song from storage: " + jsonBody, e);
     }

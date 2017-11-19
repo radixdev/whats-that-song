@@ -68,7 +68,17 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       }
     });
 
-
+    final ImageButton favoriteButton = holder.mFavoriteButton;
+    favoriteButton.setSelected(song.getIsFavorited());
+    favoriteButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        final boolean selected = favoriteButton.isSelected();
+        favoriteButton.setSelected(!selected);
+        song.setFavorited(!selected);
+        mSongStorage.storeSong(song);
+      }
+    });
 
     if (holder.mAlbumArtImage != null) {
       holder.mAlbumArtImage.setImageBitmap(null);
