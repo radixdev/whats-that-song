@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,18 +144,34 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   private static JSONObject getJsonDataFromRequest(Request request) {
     OkHttpClient client = new OkHttpClient();
 
-    try {
-      Response response = client.newCall(request).execute();
-      final ResponseBody body = response.body();
-      if (body == null) {
-        return null;
-      }
-      String jsonData = body.string();
-      return new JSONObject(jsonData);
-    } catch (Exception e) {
-      Log.e(TAG, "Fucked up while downloading album art from last fm", e);
-    }
+    Response response;
+    final ResponseBody body;
+    String jsonData;
 
+    try {
+      response = client.newCall(request).execute();
+    } catch (IOException e) {
+      e.printStackTrace();
+      Log.e(TAG, "Failed to generate request. " + request.toString(), e);
+      return null;
+    }
+    body = response.body();
+    if (body == null) {
+      return null;
+    }
+    try {
+      jsonData = body.string();
+    } catch (IOException e) {
+      Log.e(TAG, "Failed to get string body from request.", e);
+      e.printStackTrace();
+      return null;
+    }
+    try {
+      return new JSONObject(jsonData);
+    } catch (JSONException e) {
+      Log.e(TAG, "Failed to create json object from response body", e);
+      e.printStackTrace();
+    }
     return null;
   }
 

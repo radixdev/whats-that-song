@@ -9,4 +9,7 @@
     <string name="settings_map_title">Where was that song?</string>
     <string name="settings_map_enabled_summary">Map and Location Enabled</string>
     <string name="settings_map_disabled_summary">Map and Location Disabled</string>
+
+    <string name="google_maps_key">AIzaSyC9YKfFPX_g_bJEuixkTkK-ACm44QVl7gY</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
+import com.radix.nowplayinglog.fragments.SongMapFragment;
 import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.PermissionUtils;
 
@@ -34,8 +35,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     final BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(this);
-    navigation.setSelectedItemId(R.id.navigation_all_songs);
+//    navigation.setSelectedItemId(R.id.navigation_all_songs);
 //    navigation.setSelectedItemId(R.id.navigation_settings);
+    navigation.setSelectedItemId(R.id.navigation_map);
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
       switch (position) {
         case 0:
           // Return a map here!
-          return new SongListFragment();
+          return new SongMapFragment();
 
         case 1:
           return new SongListFragment();
