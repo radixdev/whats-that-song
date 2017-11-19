@@ -8,12 +8,14 @@ import android.location.Location;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.radix.nowplayinglog.R;
@@ -38,53 +40,64 @@ public class ListenerServiceTb extends NotificationListenerService {
   public void onNotificationPosted(StatusBarNotification sbn) {
     super.onNotificationPosted(sbn);
 
-    Log.d(TAG, "notif posted");
-
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
-      Song song = new Song(notificationTitle, sbn.getPostTime(), null);
-      Log.d(TAG, "current song: " +  song);
+      final Song songWithoutLocation = new Song(notificationTitle, sbn.getPostTime(), null);
+      Log.d(TAG, "current song, before location: " +  songWithoutLocation);
 
-      if (mSongStorage.isSongRepost(song)) {
+      if (mSongStorage.isSongRepost(songWithoutLocation)) {
         Log.d(TAG, "current song is a repeat, ignoring");
         return;
       }
 
-      // Now store it
-      mSongStorage.storeSong(song);
-
-      // Now notify people that storage has been updated
-      Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);
-      caughtSongIntent.putExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID, song.getId());
-      LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
-      Log.d(TAG, "broadcast song");
+      if (shouldCollectLocation()) {
+        // Grab the location and recreate the song object
+        try {
+          collectLocationAndPublishUpdatedSong(songWithoutLocation);
+        } catch (Exception e) {
+          Log.e(TAG, "Failed to collect location on song, publishing without any location");
+          publishSong(songWithoutLocation);
+        }
+      } else {
+        publishSong(songWithoutLocation);
+      }
     }
-
-    Location currentLoc = getLocation();
-    Log.d(TAG, "currentLoc retrieved " + (currentLoc == null));
   }
 
-  private Location getLocation() {
-    boolean isLocationCollectionSettingEnabled = PreferenceManager
-        .getDefaultSharedPreferences(getApplicationContext())
-        .getBoolean(getApplicationContext().getString(R.string.settings_map_key), false);
+  @SuppressLint("MissingPermission")
+  private void collectLocationAndPublishUpdatedSong(final Song existingSong) {
+    FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+    final Task<Location> lastLocationTask = locationClient.getLastLocation();
 
-    boolean isLocationPermissionGranted = PermissionUtils.isPermissionGranted(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION);
-    if (isLocationPermissionGranted && isLocationCollectionSettingEnabled) {
-      FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-      @SuppressLint("MissingPermission") final Task<Location> lastLocationTask = locationClient.getLastLocation();
+    lastLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+      @Override
+      public void onSuccess(Location location) {
+        Song songWithLocation = new Song(existingSong, location);
+        publishSong(songWithLocation);
+      }
+    });
 
-      lastLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
-        @Override
-        public void onSuccess(Location location) {
-          Log.d(TAG, "loca: " + location);
-        }
-      });
+    lastLocationTask.addOnFailureListener(new OnFailureListener() {
+      @Override
+      public void onFailure(@NonNull Exception e) {
+        Log.e(TAG, "Location collection failed from fused api for song. Publishing the regular version");
+        publishSong(existingSong);
+      }
+    });
+  }
 
-      return null;
-    } else {
-      return null;
-    }
+  /**
+   * Takes a complete song object and publishes it to the list and to storage.
+   */
+  private void publishSong(Song song) {
+    // Now store it
+    mSongStorage.storeSong(song);
+
+    // Now notify people that storage has been updated
+    Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);
+    caughtSongIntent.putExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID, song.getId());
+    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
+    Log.d(TAG, "broadcast song: " + song);
   }
 
   @Override

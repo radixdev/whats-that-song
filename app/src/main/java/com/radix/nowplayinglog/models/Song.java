@@ -22,7 +22,7 @@ public class Song {
   private final double mLongitude;
 
   /**
-   * Parses the title and artist from the notification
+   * Parses the title and artist from the notification.
    *
    * @param notificationTitle the title straight from the notification itself
    * @param heardAtLocation
@@ -46,6 +46,9 @@ public class Song {
     }
   }
 
+  /**
+   * Used to recreate the Song from storage.
+   */
   public Song(String id, String title, String artist, long postTime, boolean isFavorited, double latitude, double longitude) {
     mTitle = title;
     mArtist = artist;
@@ -55,6 +58,20 @@ public class Song {
 
     mLatitude = latitude;
     mLongitude = longitude;
+  }
+
+  /**
+   * Creates a new song but with location fields set
+   */
+  public Song(Song existingSong, Location location) {
+    mTitle = existingSong.mTitle;
+    mArtist = existingSong.mArtist;
+    mPostTime = existingSong.mPostTime;
+    mId = existingSong.mId;
+    mIsFavorited = existingSong.mIsFavorited;
+
+    mLatitude = location.getLatitude();
+    mLongitude = location.getLongitude();
   }
 
   public String getId() {
