@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     mViewPager = findViewById(R.id.viewPager);
     mViewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
+    mViewPager.setOffscreenPageLimit(2);
 
     mBottomNavigation = findViewById(R.id.navigation);
     mBottomNavigation.setOnNavigationItemSelectedListener(this);
@@ -119,9 +120,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Fragment getItem(int position) {
       switch (position) {
-//        case 0:
-//          mMapFragment = new SongMapFragment();
-//          return mMapFragment;
+        case 0:
+          mMapFragment = new SongMapFragment();
+          return mMapFragment;
 
         case 1:
           return new SongListFragment();
