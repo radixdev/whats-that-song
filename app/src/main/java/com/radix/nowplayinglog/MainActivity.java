@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Fragment getItem(int position) {
       switch (position) {
-        case 0:
-          mMapFragment = new SongMapFragment();
-          return mMapFragment;
+//        case 0:
+//          mMapFragment = new SongMapFragment();
+//          return mMapFragment;
 
         case 1:
           return new SongListFragment();
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
           return new SettingsFragment();
       }
 
-      return null;
+      return new SongListFragment();
     }
 
     @Override

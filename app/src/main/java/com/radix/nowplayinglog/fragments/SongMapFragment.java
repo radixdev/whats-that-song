@@ -41,6 +41,9 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   private SongStorageThing mSongStorageThing;
   private Map<String, Marker> mSongIdToMarkerMap;
 
+  public SongMapFragment() {
+  }
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

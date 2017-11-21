@@ -1,4 +1,7 @@
 <resources>
     <dimen name="song_list_card_height">80dp</dimen>
     <dimen name="song_list_card_height_half">28dp</dimen>
+    <dimen name="song_list_card_top_margin">7dp</dimen>
+    <dimen name="song_list_card_bottom_margin">7dp</dimen>
+    <dimen name="song_list_card_elevation">4dp</dimen>
 </resources>
