@@ -30,7 +30,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     mContext = context.getApplicationContext();
     mSongData = songData;
     mSongStorage = songStorage;
-    mClickHandlerProvider = new ClickHandlerProvider();
+    mClickHandlerProvider = new ClickHandlerProvider(mContext);
     mSongClickCallback = songClickCallback;
 
     SongSorter.sortSongs(mSongData);
@@ -55,7 +55,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mClickHandlerProvider.getAppropriateHandler().handleClick(mContext, song);
+        mClickHandlerProvider.handleClick(song);
       }
     });
 
