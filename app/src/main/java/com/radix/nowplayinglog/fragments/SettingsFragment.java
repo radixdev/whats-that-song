@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -22,6 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     addPreferencesFromResource(R.xml.settings_preferences);
     mSettingsPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_map_key));
+    onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_music_player_key));
   }
 
   @Override
@@ -35,6 +37,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (checkBoxPreference.isChecked()) {
           getPermissionToReadLocation();
         }
+      }
+    } else if (preference instanceof ListPreference) {
+      ListPreference listPreference = (ListPreference) preference;
+      if (key.equals(getString(R.string.settings_music_player_key))) {
+        String value = (String) listPreference.getEntry();
+        preference.setSummary("Music player set to: " + value);
       }
     }
   }

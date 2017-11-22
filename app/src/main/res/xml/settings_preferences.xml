@@ -11,5 +11,13 @@
             android:summaryOff="@string/settings_map_disabled_summary"
             android:summaryOn="@string/settings_map_enabled_summary"
             android:title="@string/settings_map_title"/>
+        <ListPreference
+            android:defaultValue="default"
+            android:dialogIcon="@drawable/ic_radio_black_48dp"
+            android:entries="@array/music_players"
+            android:entryValues="@array/music_players_value"
+            android:icon="@drawable/ic_headset_black_48dp"
+            android:key="@string/settings_music_player_key"
+            android:title="@string/settings_music_player_title"/>
     </PreferenceCategory>
 </PreferenceScreen>

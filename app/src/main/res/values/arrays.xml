@@ -8,4 +8,17 @@
         <item>popular</item>
         <item>top_rated</item>
     </string-array>
+    
+    <string-array name="music_players">
+        <item>System Default / Ask</item>
+        <item>Spotify</item>
+        <item>Google Play Music</item>
+        <item>Amazon Music</item>
+    </string-array>
+    <string-array name="music_players_value">
+        <item>default</item>
+        <item>spotify</item>
+        <item>google_play_music</item>
+        <item>amazon_music</item>
+    </string-array>
 </resources>
