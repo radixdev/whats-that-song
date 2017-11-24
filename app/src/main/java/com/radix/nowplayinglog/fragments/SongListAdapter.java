@@ -59,6 +59,36 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       }
     });
 
+    // TODO: juliancontreras 11/24/17 pass activity here 
+//    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//      @Override
+//      public boolean onLongClick(View view) {
+//        AlertDialog.Builder alert = new AlertDialog.Builder();
+//        alert.setTitle("Alert!!");
+//        alert.setMessage("Are you sure to delete record");
+//        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//
+//          @Override
+//          public void onClick(DialogInterface dialog, int which) {
+//            //do your work here
+//            dialog.dismiss();
+//
+//          }
+//        });
+//        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//
+//          @Override
+//          public void onClick(DialogInterface dialog, int which) {
+//
+//            dialog.dismiss();
+//          }
+//        });
+//
+//        alert.show();
+//        return true;
+//      }
+//    });
+
     final ImageButton favoriteButton = holder.mFavoriteButton;
     favoriteButton.setSelected(song.getIsFavorited());
     favoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +112,6 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     } else {
       holder.mMapIconButton.setVisibility(View.GONE);
     }
-
 
     if (holder.mSong == null || !holder.mSong.equals(song)) {
       // Need to redraw the song
