@@ -87,6 +87,26 @@ public class SongStorageThing {
     return null;
   }
 
+  public void deleteSong(Song song) {
+    if (song == null) {
+      Log.i(TAG, "Not deleting null song!");
+      return;
+    }
+    Log.d(TAG, "Deleting song: " + song);
+
+    SharedPreferences.Editor editor = mSongStore.edit();
+    editor.remove(song.getId());
+    editor.apply();
+
+    // Update the last song metadata (if needed)
+    if (mSongLastPosted.getString(SONG_LAST_POSTED_ID_KEY, "").equals(song.getId())) {
+      Log.d(TAG, "Deleting the last posted song too");
+      editor = mSongLastPosted.edit();
+      editor.remove(SONG_LAST_POSTED_ID_KEY);
+      editor.apply();
+    }
+  }
+
   /**
    * Checks if the song was posted directly previous to the last one.
    */

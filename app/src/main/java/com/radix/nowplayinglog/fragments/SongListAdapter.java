@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.art.AlbumArtDownloaderAsyncTask;
+import com.radix.nowplayinglog.fragments.swiping.ItemTouchHelperAdapter;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.SongSorter;
@@ -18,7 +19,7 @@ import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
 import java.util.List;
 
-public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> {
+public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> implements ItemTouchHelperAdapter {
   private final List<Song> mSongData;
   private final ClickHandlerProvider mClickHandlerProvider;
   private final Context mContext;
@@ -153,6 +154,15 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   @Override
   public long getItemId(int position) {
     return mSongData.get(position).getId().hashCode();
+  }
+
+  @Override
+  public void onItemDismiss(int position) {
+    Song removedSong = mSongData.remove(position);
+    notifyItemRemoved(position);
+
+    // Delete from storage
+    mSongStorage.deleteSong(removedSong);
   }
 
   /**

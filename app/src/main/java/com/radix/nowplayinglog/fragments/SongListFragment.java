@@ -9,11 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.radix.nowplayinglog.R;
+import com.radix.nowplayinglog.fragments.swiping.SimpleItemTouchHelperCallback;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
@@ -73,7 +75,9 @@ public class SongListFragment extends Fragment {
 
     mAdapter = new SongListAdapter(getContext(), mSongStorageThing.getAllSongs(), mSongStorageThing, mSongClickCallback);
     mRecyclerView.setAdapter(mAdapter);
-
+    SimpleItemTouchHelperCallback simpleItemTouchHelperCallback = new SimpleItemTouchHelperCallback(mAdapter);
+    ItemTouchHelper touchHelper = new ItemTouchHelper(simpleItemTouchHelperCallback);
+    touchHelper.attachToRecyclerView(mRecyclerView);
     return rootView;
   }
 

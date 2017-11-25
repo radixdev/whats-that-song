@@ -46,6 +46,7 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
+    // TODO: 11/25/2017 Remove songs from the map here as well! 
     super.onCreate(savedInstanceState);
     mSongIdToMarkerMap = new HashMap<>();
     mSongStorageThing = new SongStorageThing(getContext());
