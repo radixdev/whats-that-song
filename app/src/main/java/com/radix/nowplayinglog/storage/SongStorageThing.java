@@ -2,6 +2,7 @@ package com.radix.nowplayinglog.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.util.Log;
 
 import com.radix.nowplayinglog.models.Song;
@@ -34,6 +35,7 @@ public class SongStorageThing {
     mSongLastPosted = context.getSharedPreferences(SONG_LAST_POSTED_PREFS_LOCATION, Context.MODE_PRIVATE);
 
 //    correctAllSongsInStorage();
+    addTestSongs();
   }
 
   public List<Song> getAllSongs() {
@@ -108,6 +110,24 @@ public class SongStorageThing {
       Log.e(TAG, "Failed to retrieve song from storage: " + jsonBody, e);
     }
     return null;
+  }
+
+  private void addTestSongs() {
+    if (!getAllSongs().isEmpty()) {
+      return;
+    }
+
+    Location loc = new Location("");
+    loc.setLatitude(40.749153d);
+    loc.setLongitude(-73.996565d);
+    final long postTime = System.currentTimeMillis() / 1000L;
+    Song fakeSong1 = new Song("i am a rock by simon and garfunkel", postTime, loc);
+    storeSong(fakeSong1);
+
+    loc.setLatitude(40.747215d);
+    loc.setLongitude(-73.9981112d);
+    Song fakeSong2 = new Song("test song by gucci mane", 100 + postTime, loc);
+    storeSong(fakeSong2);
   }
 
   /**
