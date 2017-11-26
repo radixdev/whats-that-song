@@ -111,28 +111,32 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       public boolean onLongClick(View view) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
         alert.setTitle(song.getTitleAndArtistForDisplay());
-        alert.setItems(R.array.song_long_press_options, new DialogInterface.OnClickListener() {
+        final int song_long_press_options;
+        if (song.hasLocationSet()) {
+          song_long_press_options = R.array.song_long_press_options;
+        } else {
+          song_long_press_options = R.array.song_long_press_options_without_map;
+        }
+
+        alert.setItems(song_long_press_options, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-              case 0:
-                Log.d(TAG, "User pressed share in dialog");
+            String option = mContext.getResources().getStringArray(song_long_press_options)[which];
+            Log.d(TAG, "User pressed " + option + " in dialog");
+            switch (option) {
+              case "Share":
                 shareSong(song);
                 break;
-              case 1:
-                Log.d(TAG, "User pressed play song in dialog");
+              case "Play Song":
                 openSongInPlayer(song);
                 break;
-              case 2:
-                Log.d(TAG, "User pressed favorite in dialog");
+              case "Favorite":
                 favoriteSong(favoriteButton, song);
                 break;
-              case 3:
-                Log.d(TAG, "User pressed map in dialog");
+              case "Find in Map":
                 openSongInMap(song);
                 break;
-              case 4:
-                Log.d(TAG, "User pressed delete in dialog");
+              case "Delete":
                 deleteSong(holder.getAdapterPosition());
                 break;
             }

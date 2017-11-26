@@ -27,4 +27,11 @@
         <item>Find in Map</item>
         <item>Delete</item>
     </string-array>
+
+    <string-array name="song_long_press_options_without_map">
+        <item>Share</item>
+        <item>Play Song</item>
+        <item>Favorite</item>
+        <item>Delete</item>
+    </string-array>
 </resources>
