@@ -33,11 +33,11 @@ public class ClickHandlerProvider {
 
   public void handleClick(Song song) {
     try {
-      getAppropriateHandler().handleClick(mContext, song);
+      getAppropriateHandler().handlePlaySongClick(mContext, song);
     } catch (Exception e) {
       e.printStackTrace();
       Log.e(TAG, "Caught some BOGUS error on the song click. Using default handler. Sad!", e);
-      new DefaultClickHandler().handleClick(mContext, song);
+      new DefaultClickHandler().handlePlaySongClick(mContext, song);
     }
   }
 }

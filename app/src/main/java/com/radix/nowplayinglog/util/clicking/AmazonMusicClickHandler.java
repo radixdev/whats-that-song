@@ -15,7 +15,7 @@ public class AmazonMusicClickHandler implements ISongClickHandler {
   private static final String TAG = AmazonMusicClickHandler.class.getName();
 
   @Override
-  public void handleClick(Context context, Song song) {
+  public void handlePlaySongClick(Context context, Song song) {
     Log.v(TAG, "Handling click for " + song);
 
     Intent intent = new Intent();

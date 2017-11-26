@@ -13,7 +13,7 @@ public class SpotifyClickHandler implements ISongClickHandler {
   private static final String TAG = SpotifyClickHandler.class.getName();
 
   @Override
-  public void handleClick(Context context, Song song) {
+  public void handlePlaySongClick(Context context, Song song) {
     Log.v(TAG, "Handling click for " + song);
     final Intent intent = new Intent(Intent.ACTION_MAIN);
     intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);

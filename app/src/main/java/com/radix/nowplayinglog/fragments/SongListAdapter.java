@@ -208,7 +208,12 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
   }
 
   private void shareSong(Song song) {
-
+    String text = song.getTitleAndArtistForDisplay() + " (" + song.getPrettyDate() + ")";
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+    sendIntent.setType("text/plain");
+    mContext.startActivity(sendIntent);
   }
 
   private void favoriteSong(ImageButton favoriteButton, Song song) {
