@@ -15,6 +15,7 @@
         <item>Amazon Music</item>
         <item>Google Play Music</item>
         <item>SoundCloud</item>
+        <item>Pandora</item>
     </string-array>
     <string-array name="music_players_value">
         <item>default</item>
@@ -22,6 +23,7 @@
         <item>amazon_music</item>
         <item>google_play_music</item>
         <item>soundcloud</item>
+        <item>pandora</item>
     </string-array>
 
     <string-array name="song_long_press_options">

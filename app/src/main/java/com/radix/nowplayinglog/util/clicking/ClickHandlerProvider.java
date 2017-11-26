@@ -36,6 +36,9 @@ public class ClickHandlerProvider {
 
       case "soundcloud":
         return new SoundcloudClickHandler();
+
+      case "pandora":
+        return new PandoraClickHandler();
     }
     return new DefaultClickHandler();
   }
