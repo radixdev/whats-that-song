@@ -43,7 +43,7 @@ public class SongListFragment extends Fragment {
       public void onReceive(Context context, Intent intent) {
         if (mAdapter != null) {
           // Get the song id
-          String id = intent.getStringExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID);
+          String id = intent.getStringExtra(Constants.BROADCAST_FILTER_SONG_ID);
           Song song = mSongStorageThing.getSong(id);
           mAdapter.addSong(song);
         }

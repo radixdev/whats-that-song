@@ -46,22 +46,30 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
-    // TODO: 11/25/2017 Remove songs from the map here as well! 
     super.onCreate(savedInstanceState);
     mSongIdToMarkerMap = new HashMap<>();
     mSongStorageThing = new SongStorageThing(getContext());
 
-    LocalBroadcastManager.getInstance(getContext()).registerReceiver(new BroadcastReceiver() {
+    final LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getContext());
+    localBroadcastManager.registerReceiver(new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
         // Get the song id
-        String id = intent.getStringExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID);
+        String id = intent.getStringExtra(Constants.BROADCAST_FILTER_SONG_ID);
         Song song = mSongStorageThing.getSong(id);
         if (song != null && song.hasLocationSet() && mMap != null) {
           addSongToMap(song);
         }
       }
     }, new IntentFilter(Constants.NEW_SONG_BROADCAST_FILTER));
+    localBroadcastManager.registerReceiver(new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        // Get the song id
+        String id = intent.getStringExtra(Constants.BROADCAST_FILTER_SONG_ID);
+        removeSongFromMap(id);
+      }
+    }, new IntentFilter(Constants.REMOVED_SONG_BROADCAST_FILTER));
   }
 
   @Override
@@ -153,5 +161,13 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
         .icon(bitmapDescriptor));
 
     mSongIdToMarkerMap.put(song.getId(), marker);
+  }
+
+  private void removeSongFromMap(String songId) {
+    Log.d(TAG, "Removing song from map: " + songId);
+    if (mSongIdToMarkerMap.containsKey(songId)) {
+      final Marker marker = mSongIdToMarkerMap.remove(songId);
+      marker.remove();
+    }
   }
 }

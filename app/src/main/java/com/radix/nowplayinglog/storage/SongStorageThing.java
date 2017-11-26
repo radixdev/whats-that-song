@@ -99,6 +99,7 @@ public class SongStorageThing {
     editor.apply();
 
     // Update the last song metadata (if needed)
+    // TODO: 11/26/2017 Replace the last song here! 
     if (mSongLastPosted.getString(SONG_LAST_POSTED_ID_KEY, "").equals(song.getId())) {
       Log.d(TAG, "Deleting the last posted song too");
       editor = mSongLastPosted.edit();

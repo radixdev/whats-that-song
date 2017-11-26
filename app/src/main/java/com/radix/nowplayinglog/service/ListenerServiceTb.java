@@ -95,7 +95,7 @@ public class ListenerServiceTb extends NotificationListenerService {
 
     // Now notify people that storage has been updated
     Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);
-    caughtSongIntent.putExtra(Constants.NEW_SONG_BROADCAST_FILTER_SONG_ID, song.getId());
+    caughtSongIntent.putExtra(Constants.BROADCAST_FILTER_SONG_ID, song.getId());
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
     Log.d(TAG, "broadcast song: " + song);
   }

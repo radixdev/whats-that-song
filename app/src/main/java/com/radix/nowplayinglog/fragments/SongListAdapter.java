@@ -1,6 +1,8 @@
 package com.radix.nowplayinglog.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.radix.nowplayinglog.art.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.fragments.swiping.ItemTouchHelperAdapter;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
+import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.SongSorter;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
@@ -163,6 +166,10 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
     // Delete from storage
     mSongStorage.deleteSong(removedSong);
+
+    Intent removedSongIntent = new Intent(Constants.REMOVED_SONG_BROADCAST_FILTER);
+    removedSongIntent.putExtra(Constants.BROADCAST_FILTER_SONG_ID, removedSong.getId());
+    LocalBroadcastManager.getInstance(mContext.getApplicationContext()).sendBroadcast(removedSongIntent);
   }
 
   /**
