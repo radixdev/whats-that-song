@@ -19,7 +19,17 @@ public class ClickHandlerProvider {
     mDefaultSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  public ISongClickHandler getAppropriateHandler() {
+  public void handleClick(Song song) {
+    try {
+      getAppropriateHandler().handlePlaySongClick(mContext, song);
+    } catch (Exception e) {
+      e.printStackTrace();
+      Log.e(TAG, "Caught some BOGUS error on the song click. Using default handler. Sad!", e);
+      new DefaultClickHandler().handlePlaySongClick(mContext, song);
+    }
+  }
+
+  private ISongClickHandler getAppropriateHandler() {
     // Check the current chooser value
     final String currentPlayerValue = mDefaultSharedPrefs.getString(mContext.getString(R.string.settings_music_player_key), "");
     Log.d(TAG, "Handling song click for " + currentPlayerValue);
@@ -47,15 +57,5 @@ public class ClickHandlerProvider {
         return new DeezerClickHandler();
     }
     return new DefaultClickHandler();
-  }
-
-  public void handleClick(Song song) {
-    try {
-      getAppropriateHandler().handlePlaySongClick(mContext, song);
-    } catch (Exception e) {
-      e.printStackTrace();
-      Log.e(TAG, "Caught some BOGUS error on the song click. Using default handler. Sad!", e);
-      new DefaultClickHandler().handlePlaySongClick(mContext, song);
-    }
   }
 }
