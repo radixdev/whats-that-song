@@ -55,6 +55,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     final Song song = mSongData.get(position);
     holder.mArtistTextView.setText(song.getArtist());
     holder.mTitleTextView.setText(song.getTitle());
+    holder.mSongDateTextView.setText(song.getPrettyDate());
 
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -184,6 +185,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     Song mSong;
     TextView mTitleTextView;
     TextView mArtistTextView;
+    TextView mSongDateTextView;
     ImageView mAlbumArtImage;
     AlbumArtDownloaderAsyncTask mImageLoaderTask;
 
@@ -194,6 +196,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       super(v);
       mTitleTextView = v.findViewById(R.id.songTitleTextView);
       mArtistTextView = v.findViewById(R.id.songArtistTextView);
+      mSongDateTextView = v.findViewById(R.id.songPostTimeTextView);
       mAlbumArtImage = v.findViewById(R.id.songAlbumImage);
       mFavoriteButton = v.findViewById(R.id.imageButtonFavorite);
       mMapIconButton = v.findViewById(R.id.imageButtonMap);

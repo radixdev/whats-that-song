@@ -33,13 +33,13 @@
                 tools:ignore="HardcodedText,RtlHardcoded"/>
 
             <LinearLayout
+                android:id="@+id/artist_title_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/artist_title_container"
-                android:orientation="vertical"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/action_container"
                 android:layout_toRightOf="@id/songAlbumImage"
-                android:layout_toLeftOf="@id/action_container">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/songTitleTextView"
@@ -49,13 +49,26 @@
                     android:text="song title"
                     android:textAppearance="@android:style/TextAppearance.Material.Medium"
                     android:textSize="17sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/songArtistTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:text="artist"/>
+
+                <TextView
+                    android:id="@+id/songPostTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10-17 12:56 PM"
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:layout_marginTop="2dp"
+                    android:textSize="12sp"/>
+
             </LinearLayout>
 
             <RelativeLayout
@@ -86,6 +99,7 @@
                     android:layout_alignParentBottom="true"
                     app:srcCompat="@drawable/ic_map_black_48dp"/>
             </RelativeLayout>
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

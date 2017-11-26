@@ -1,6 +1,10 @@
 package com.radix.nowplayinglog.models;
 
 import android.location.Location;
+import android.text.format.DateFormat;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * The song object
@@ -112,6 +116,12 @@ public class Song {
 
   public boolean hasLocationSet() {
     return mLatitude != LOCATION_DEFAULT_VALUE && mLongitude != LOCATION_DEFAULT_VALUE;
+  }
+
+  public String getPrettyDate() {
+    Calendar cal = Calendar.getInstance(Locale.US);
+    cal.setTimeInMillis(mPostTime * 1000L);
+    return DateFormat.format("MMMM-dd hh:mm aa", cal).toString();
   }
 
   @Override
