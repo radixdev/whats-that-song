@@ -21,12 +21,18 @@ public class ClickHandlerProvider {
 
   public ISongClickHandler getAppropriateHandler() {
     // Check the current chooser value
-    String currentPlayerValue = mDefaultSharedPrefs.getString(mContext.getString(R.string.settings_music_player_key), "");
+    final String currentPlayerValue = mDefaultSharedPrefs.getString(mContext.getString(R.string.settings_music_player_key), "");
     Log.d(TAG, "Handling song click for " + currentPlayerValue);
-    if (currentPlayerValue.equals("spotify")) {
-      return new SpotifyClickHandler();
-    } else if (currentPlayerValue.equals("amazon_music")) {
-      return new AmazonMusicClickHandler();
+
+    switch (currentPlayerValue){
+      case "spotify":
+        return new SpotifyClickHandler();
+
+      case "amazon_music":
+        return new AmazonMusicClickHandler();
+
+      case "google_play_music":
+        return new GooglePlayMusicClickHandler();
     }
     return new DefaultClickHandler();
   }

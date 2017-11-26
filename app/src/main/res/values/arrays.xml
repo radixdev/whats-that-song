@@ -13,11 +13,13 @@
         <item>System Default / Ask</item>
         <item>Spotify</item>
         <item>Amazon Music</item>
+        <item>Google Play Music</item>
     </string-array>
     <string-array name="music_players_value">
         <item>default</item>
         <item>spotify</item>
         <item>amazon_music</item>
+        <item>google_play_music</item>
     </string-array>
 
     <string-array name="song_long_press_options">
