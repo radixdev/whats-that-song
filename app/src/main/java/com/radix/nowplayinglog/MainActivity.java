@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity
 
   private ViewPager mViewPager;
   private BottomNavigationView mBottomNavigation;
-
   private GoogleDriveBackupHandler mGoogleDriveBackupHandler;
+  private AlertDialog mNotificationAccessDialog;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +189,10 @@ public class MainActivity extends AppCompatActivity
         }
       });
 
-      alert.show();
+      if (mNotificationAccessDialog != null) {
+        mNotificationAccessDialog.dismiss();
+      }
+      mNotificationAccessDialog = alert.show();
     }
   }
 
