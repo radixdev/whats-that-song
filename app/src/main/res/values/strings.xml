@@ -19,4 +19,8 @@
 
     <string name="google_maps_key">AIzaSyB_fGqsb1AJmf6A52ENKOmL-Xms8hSzY3E</string>
     <string name="file_create_error">Unable to create Google Drive backup file</string>
+
+    <string name="enable_notification_listener_title">Please Enable Notification Access</string>
+    <string name="enable_notification_listener_message">Now Playing Log requires Notification Access to watch
+        for the \'Google Now Playing\' notification. Please enable it in Settings.</string>
 </resources>

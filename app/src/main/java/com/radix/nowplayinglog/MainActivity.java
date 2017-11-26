@@ -1,6 +1,9 @@
 package com.radix.nowplayinglog;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -30,9 +34,11 @@ public class MainActivity extends AppCompatActivity
     SettingsFragment.OnSettingsButtonClickedListener {
 
   private static final String TAG = MainActivity.class.getName();
-  private ViewPager mViewPager;
+  private static final int NOTIFICATION_LISTENER_ENABLEMENT_CODE = 5;
 
+  private ViewPager mViewPager;
   private BottomNavigationView mBottomNavigation;
+
   private GoogleDriveBackupHandler mGoogleDriveBackupHandler;
 
   @Override
@@ -49,8 +55,7 @@ public class MainActivity extends AppCompatActivity
 
     mBottomNavigation = findViewById(R.id.navigation);
     mBottomNavigation.setOnNavigationItemSelectedListener(this);
-//    mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
-    mBottomNavigation.setSelectedItemId(R.id.navigation_settings);
+    mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -76,11 +81,6 @@ public class MainActivity extends AppCompatActivity
       @Override
       public void onPageScrollStateChanged(int state) {}
     });
-
-    if (!PermissionUtils.isNotificationListenerEnabled(this)) {
-      // TODO: 11/18/2017 show a dialog window here instead of just jumping straight there
-      startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0);
-    }
 
     mGoogleDriveBackupHandler = new GoogleDriveBackupHandler(this);
   }
@@ -120,6 +120,79 @@ public class MainActivity extends AppCompatActivity
     mGoogleDriveBackupHandler.startBackup();
   }
 
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    if (requestCode == Constants.READ_LOCATION_PERMISSIONS_REQUEST) {
+      if (grantResults.length == 1 &&
+          grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        Toast.makeText(this, "Read Location permission granted", Toast.LENGTH_SHORT).show();
+      } else {
+        // showRationale = false if user clicks Never Ask Again, otherwise true
+        boolean showRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (showRationale) {
+          // do something here to handle degraded mode
+        } else {
+          Toast.makeText(this, "Read Location permission denied", Toast.LENGTH_SHORT).show();
+        }
+      }
+    } else {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    mGoogleDriveBackupHandler.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == NOTIFICATION_LISTENER_ENABLEMENT_CODE) {
+      checkForNotificationListenerStatus();
+    }
+    super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    checkForNotificationListenerStatus();
+  }
+
+  private void checkForNotificationListenerStatus() {
+    if (!PermissionUtils.isNotificationListenerEnabled(this)) {
+      final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+      alert.setTitle(getString(R.string.enable_notification_listener_title));
+      alert.setMessage(getString(R.string.enable_notification_listener_message));
+      alert.setPositiveButton("Take me to Settings", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), NOTIFICATION_LISTENER_ENABLEMENT_CODE);
+          dialog.dismiss();
+        }
+      });
+      alert.setNegativeButton("No, leave the app", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+          dialog.dismiss();
+          finish();
+        }
+      });
+
+      alert.setOnKeyListener(new Dialog.OnKeyListener() {
+        @Override
+        public boolean onKey(DialogInterface arg0, int keyCode,
+                             KeyEvent event) {
+          if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+          }
+          return true;
+        }
+      });
+
+      alert.show();
+    }
+  }
+
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     private SongMapFragment mMapFragment;
 
@@ -152,33 +225,5 @@ public class MainActivity extends AppCompatActivity
     SongMapFragment getMapFragment() {
       return mMapFragment;
     }
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-    if (requestCode == Constants.READ_LOCATION_PERMISSIONS_REQUEST) {
-      if (grantResults.length == 1 &&
-          grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(this, "Read Location permission granted", Toast.LENGTH_SHORT).show();
-      } else {
-        // showRationale = false if user clicks Never Ask Again, otherwise true
-        boolean showRationale = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
-
-        if (showRationale) {
-          // do something here to handle degraded mode
-        } else {
-          Toast.makeText(this, "Read Location permission denied", Toast.LENGTH_SHORT).show();
-        }
-      }
-    } else {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-  }
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    mGoogleDriveBackupHandler.onActivityResult(requestCode, resultCode, data);
-    super.onActivityResult(requestCode, resultCode, data);
   }
 }
