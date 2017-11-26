@@ -2,7 +2,6 @@ package com.radix.nowplayinglog;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,30 +17,13 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.drive.CreateFileActivityOptions;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveClient;
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveResourceClient;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
 import com.radix.nowplayinglog.fragments.SongMapFragment;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.util.Constants;
+import com.radix.nowplayinglog.util.GoogleDriveBackupHandler;
 import com.radix.nowplayinglog.util.PermissionUtils;
-
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 public class MainActivity extends AppCompatActivity
     implements BottomNavigationView.OnNavigationItemSelectedListener, SongListFragment.OnSongMapIconPressedListener,
@@ -51,24 +33,7 @@ public class MainActivity extends AppCompatActivity
   private ViewPager mViewPager;
 
   private BottomNavigationView mBottomNavigation;
-  /**
-   * Request code for google sign-in
-   */
-  private static final int REQUEST_CODE_SIGN_IN = 2;
-
-  private static final int REQUEST_CODE_CREATE_FILE = 1;
-
-  /**
-   * Handles high-level drive functions like sync
-   */
-  private DriveClient mDriveClient;
-
-  private GoogleSignInClient mGoogleSignInClient;
-
-  /**
-   * Handle access to Drive resources/files.
-   */
-  private DriveResourceClient mDriveResourceClient;
+  private GoogleDriveBackupHandler mGoogleDriveBackupHandler;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +81,8 @@ public class MainActivity extends AppCompatActivity
       // TODO: 11/18/2017 show a dialog window here instead of just jumping straight there
       startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0);
     }
+
+    mGoogleDriveBackupHandler = new GoogleDriveBackupHandler(this);
   }
 
   @Override
@@ -150,7 +117,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   public void onGoogleDriveBackupClicked() {
     Log.d(TAG, "On Google Drive backup clicked");
-    startBackup();
+    mGoogleDriveBackupHandler.startBackup();
   }
 
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -211,98 +178,7 @@ public class MainActivity extends AppCompatActivity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    switch (requestCode) {
-      case REQUEST_CODE_SIGN_IN:
-        if (resultCode != RESULT_OK) {
-          // Sign-in may fail or be cancelled by the user. For this sample, sign-in is
-          // required and is fatal. For apps where sign-in is optional, handle
-          // appropriately
-          Log.e(TAG, "Sign-in failed.");
-          return;
-        }
-
-        Task<GoogleSignInAccount> getAccountTask =
-            GoogleSignIn.getSignedInAccountFromIntent(data);
-        if (getAccountTask.isSuccessful()) {
-          initializeDriveClient(getAccountTask.getResult());
-          backupSongsTask(mDriveResourceClient, mDriveClient);
-        } else {
-          Log.e(TAG, "Sign-in failed.");
-        }
-        break;
-    }
+    mGoogleDriveBackupHandler.onActivityResult(requestCode, resultCode, data);
     super.onActivityResult(requestCode, resultCode, data);
-  }
-
-  private void backupSongsTask(DriveResourceClient driveResourceClient, final DriveClient driveClient) {
-    Task<DriveContents> createContentsTask = driveResourceClient.createContents();
-    createContentsTask
-        .continueWithTask(new Continuation<DriveContents, Task<IntentSender>>() {
-          @Override
-          public Task<IntentSender> then(@NonNull Task<DriveContents> task)
-              throws Exception {
-            DriveContents contents = task.getResult();
-            OutputStream outputStream = contents.getOutputStream();
-            try (Writer writer = new OutputStreamWriter(outputStream)) {
-              writer.write("Hello World!");
-            }
-
-            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("Now Playing Log Backup")
-                .setMimeType("text/plain")
-                .build();
-
-            CreateFileActivityOptions createOptions =
-                new CreateFileActivityOptions.Builder()
-                    .setInitialDriveContents(contents)
-                    .setInitialMetadata(changeSet)
-                    .build();
-            return driveClient.newCreateFileActivityIntentSender(createOptions);
-          }
-        })
-        .addOnSuccessListener(this,
-            new OnSuccessListener<IntentSender>() {
-              @Override
-              public void onSuccess(IntentSender intentSender) {
-                try {
-                  startIntentSenderForResult(
-                      intentSender, REQUEST_CODE_CREATE_FILE, null, 0, 0, 0);
-                } catch (IntentSender.SendIntentException e) {
-                  Log.e(TAG, "Unable to create file", e);
-                  showMessage(getString(R.string.file_create_error));
-                }
-              }
-            })
-        .addOnFailureListener(this, new OnFailureListener() {
-          @Override
-          public void onFailure(@NonNull Exception e) {
-            Log.e(TAG, "Unable to create file", e);
-            showMessage(getString(R.string.file_create_error));
-            finish();
-          }
-        });
-  }
-
-  private void startBackup() {
-    Log.i(TAG, "Start sign in");
-    mGoogleSignInClient = buildGoogleSignInClient();
-    startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-  }
-
-  private void initializeDriveClient(GoogleSignInAccount signInAccount) {
-    mDriveClient = Drive.getDriveClient(getApplicationContext(), signInAccount);
-    mDriveResourceClient = Drive.getDriveResourceClient(getApplicationContext(), signInAccount);
-  }
-
-  private GoogleSignInClient buildGoogleSignInClient() {
-    GoogleSignInOptions signInOptions =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestScopes(Drive.SCOPE_FILE)
-            .build();
-    return GoogleSignIn.getClient(this, signInOptions);
-  }
-
-  private void showMessage(String msg) {
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
   }
 }
