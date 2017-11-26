@@ -44,6 +44,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         String value = (String) listPreference.getEntry();
         preference.setSummary("Music player set to: " + value);
       }
+    } else {
+      // It's just a button...
+
     }
   }
 

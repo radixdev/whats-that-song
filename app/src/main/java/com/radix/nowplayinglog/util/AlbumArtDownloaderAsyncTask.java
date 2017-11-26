@@ -1,4 +1,4 @@
-package com.radix.nowplayinglog.art;
+package com.radix.nowplayinglog.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.radix.nowplayinglog.models.Song;
-import com.radix.nowplayinglog.util.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;

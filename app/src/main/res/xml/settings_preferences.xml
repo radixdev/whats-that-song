@@ -19,5 +19,10 @@
             android:icon="@drawable/ic_headset_black_48dp"
             android:key="@string/settings_music_player_key"
             android:title="@string/settings_music_player_title"/>
+        <Preference
+            android:title="@string/settings_google_drive_backup_title"
+            android:key="@string/settings_google_drive_backup_key"
+            android:summary=""
+            android:icon="@drawable/ic_backup_black_48dp"/>
     </PreferenceCategory>
 </PreferenceScreen>
