@@ -65,40 +65,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mClickHandlerProvider.handleClick(song);
-      }
-    });
-
-    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View view) {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
-        alert.setTitle("Alert!!");
-        alert.setMessage("Are you sure to delete record");
-        alert.setItems(R.array.song_long_press_options, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            switch (which) {
-              case 0:
-                Log.d(TAG, "User pressed share in dialog");
-                break;
-              case 1:
-                Log.d(TAG, "User pressed map in dialog");
-                break;
-              case 2:
-                Log.d(TAG, "User pressed favorite in dialog");
-                break;
-              case 3:
-                Log.d(TAG, "User pressed delete in dialog");
-                break;
-            }
-
-            dialog.dismiss();
-          }
-        });
-
-        alert.show();
-        return true;
+        openSongInPlayer(song);
       }
     });
 
@@ -107,9 +74,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     favoriteButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        song.setFavorited(!song.getIsFavorited());
-        favoriteButton.setSelected(song.getIsFavorited());
-        mSongStorage.storeSong(song);
+        favoriteSong(favoriteButton, song);
       }
     });
 
@@ -119,11 +84,11 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       holder.mMapIconButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          mSongMapClickCallback.onSongMapClicked(song);
+          openSongInMap(song);
         }
       });
     } else {
-      holder.mMapIconButton.setVisibility(View.GONE);
+      holder.mMapIconButton.setVisibility(View.INVISIBLE);
     }
 
     if (holder.mSong == null || !holder.mSong.equals(song)) {
@@ -136,14 +101,50 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         holder.mImageLoaderTask.cancel(true);
       }
 
-//    Glide.with(mContext)
-//        .load("https://ih1.redbubble.net/image.63252269.3457/flat,800x800,075,t.u2.jpg")
-//        .into(holder.mAlbumArtImage);
-
       AlbumArtDownloaderAsyncTask task = new AlbumArtDownloaderAsyncTask(holder.mAlbumArtImage, song, mContext);
       holder.mImageLoaderTask = task;
       task.execute();
     }
+
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+        alert.setTitle(song.getTitleAndArtistForDisplay());
+        alert.setItems(R.array.song_long_press_options, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+              case 0:
+                Log.d(TAG, "User pressed share in dialog");
+                shareSong(song);
+                break;
+              case 1:
+                Log.d(TAG, "User pressed play song in dialog");
+                openSongInPlayer(song);
+                break;
+              case 2:
+                Log.d(TAG, "User pressed favorite in dialog");
+                favoriteSong(favoriteButton, song);
+                break;
+              case 3:
+                Log.d(TAG, "User pressed map in dialog");
+                openSongInMap(song);
+                break;
+              case 4:
+                Log.d(TAG, "User pressed delete in dialog");
+                deleteSong(holder.getAdapterPosition());
+                break;
+            }
+
+            dialog.dismiss();
+          }
+        });
+
+        alert.show();
+        return true;
+      }
+    });
 
     holder.mSong = song;
   }
@@ -154,7 +155,6 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
     if (holder.mImageLoaderTask != null) {
       holder.mImageLoaderTask.cancel(true);
-
     }
   }
 
@@ -170,15 +170,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
   @Override
   public void onItemDismiss(int position) {
-    Song removedSong = mSongData.remove(position);
-    notifyItemRemoved(position);
-
-    // Delete from storage
-    mSongStorage.deleteSong(removedSong);
-
-    Intent removedSongIntent = new Intent(Constants.REMOVED_SONG_BROADCAST_FILTER);
-    removedSongIntent.putExtra(Constants.BROADCAST_FILTER_SONG_ID, removedSong.getId());
-    LocalBroadcastManager.getInstance(mContext.getApplicationContext()).sendBroadcast(removedSongIntent);
+    deleteSong(position);
   }
 
   /**
@@ -209,5 +201,35 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       mFavoriteButton = v.findViewById(R.id.imageButtonFavorite);
       mMapIconButton = v.findViewById(R.id.imageButtonMap);
     }
+  }
+
+  private void openSongInPlayer(Song song) {
+    mClickHandlerProvider.handleClick(song);
+  }
+
+  private void shareSong(Song song) {
+
+  }
+
+  private void favoriteSong(ImageButton favoriteButton, Song song) {
+    song.setFavorited(!song.getIsFavorited());
+    favoriteButton.setSelected(song.getIsFavorited());
+    mSongStorage.storeSong(song);
+  }
+
+  private void openSongInMap(Song song) {
+    mSongMapClickCallback.onSongMapClicked(song);
+  }
+
+  private void deleteSong(int adapterPosition) {
+    Song removedSong = mSongData.remove(adapterPosition);
+    notifyItemRemoved(adapterPosition);
+
+    // Delete from storage
+    mSongStorage.deleteSong(removedSong);
+
+    Intent removedSongIntent = new Intent(Constants.REMOVED_SONG_BROADCAST_FILTER);
+    removedSongIntent.putExtra(Constants.BROADCAST_FILTER_SONG_ID, removedSong.getId());
+    LocalBroadcastManager.getInstance(mContext.getApplicationContext()).sendBroadcast(removedSongIntent);
   }
 }

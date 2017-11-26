@@ -22,8 +22,9 @@
 
     <string-array name="song_long_press_options">
         <item>Share</item>
-        <item>Find in Map</item>
+        <item>Play Song</item>
         <item>Favorite</item>
+        <item>Find in Map</item>
         <item>Delete</item>
     </string-array>
 </resources>

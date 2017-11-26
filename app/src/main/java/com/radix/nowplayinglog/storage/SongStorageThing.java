@@ -150,9 +150,7 @@ public class SongStorageThing {
     Song fakeSong2 = new Song("test song by gucci mane", 100 + postTime, loc);
     storeSong(fakeSong2);
 
-    loc.setLatitude(40.747215d);
-    loc.setLongitude(-73.9981112d);
-    Song fakeSong3 = new Song("super duper long song name that has no business being this long by an even longer artist with an even longer name but not by much", 200 + postTime, loc);
+    Song fakeSong3 = new Song("super duper long song name that has no business being this long by an even longer artist with an even longer name but not by much", 200 + postTime, null);
     storeSong(fakeSong3);
   }
 
