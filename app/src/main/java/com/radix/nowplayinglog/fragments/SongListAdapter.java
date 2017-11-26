@@ -1,9 +1,12 @@
 package com.radix.nowplayinglog.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +26,13 @@ import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 import java.util.List;
 
 public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> implements ItemTouchHelperAdapter {
+  private static final String TAG = SongStorageThing.class.getName();
+
   private final List<Song> mSongData;
   private final ClickHandlerProvider mClickHandlerProvider;
   private final Context mContext;
   private final SongStorageThing mSongStorage;
-  private final SongListFragment.OnSongMapIconPressedListener mSongClickCallback;
+  private final SongListFragment.OnSongMapIconPressedListener mSongMapClickCallback;
 
   SongListAdapter(Context context, List<Song> songData,
                          SongStorageThing songStorage, SongListFragment.OnSongMapIconPressedListener songClickCallback) {
@@ -35,7 +40,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     mSongData = songData;
     mSongStorage = songStorage;
     mClickHandlerProvider = new ClickHandlerProvider(mContext);
-    mSongClickCallback = songClickCallback;
+    mSongMapClickCallback = songClickCallback;
 
     SongSorter.sortSongs(mSongData);
 
@@ -64,35 +69,38 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       }
     });
 
-    // TODO: juliancontreras 11/24/17 pass activity here 
-//    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//      @Override
-//      public boolean onLongClick(View view) {
-//        AlertDialog.Builder alert = new AlertDialog.Builder();
-//        alert.setTitle("Alert!!");
-//        alert.setMessage("Are you sure to delete record");
-//        alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//
-//          @Override
-//          public void onClick(DialogInterface dialog, int which) {
-//            //do your work here
-//            dialog.dismiss();
-//
-//          }
-//        });
-//        alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//
-//          @Override
-//          public void onClick(DialogInterface dialog, int which) {
-//
-//            dialog.dismiss();
-//          }
-//        });
-//
-//        alert.show();
-//        return true;
-//      }
-//    });
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(holder.itemView.getContext());
+        alert.setTitle("Alert!!");
+        alert.setMessage("Are you sure to delete record");
+        alert.setItems(R.array.song_long_press_options, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+              case 0:
+                Log.d(TAG, "User pressed share in dialog");
+                break;
+              case 1:
+                Log.d(TAG, "User pressed map in dialog");
+                break;
+              case 2:
+                Log.d(TAG, "User pressed favorite in dialog");
+                break;
+              case 3:
+                Log.d(TAG, "User pressed delete in dialog");
+                break;
+            }
+
+            dialog.dismiss();
+          }
+        });
+
+        alert.show();
+        return true;
+      }
+    });
 
     final ImageButton favoriteButton = holder.mFavoriteButton;
     favoriteButton.setSelected(song.getIsFavorited());
@@ -111,7 +119,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
       holder.mMapIconButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          mSongClickCallback.onSongMapClicked(song);
+          mSongMapClickCallback.onSongMapClicked(song);
         }
       });
     } else {
