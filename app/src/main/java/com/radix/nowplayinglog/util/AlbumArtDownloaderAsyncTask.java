@@ -75,11 +75,11 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-    try {
-      Log.d(TAG, "Using json: " + json.toString(4));
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      Log.v(TAG, "Using json: " + json.toString(4));
+//    } catch (JSONException e) {
+//      e.printStackTrace();
+//    }
     // Now let's parse
     imageUrl = retrieveUrlFromLastFmTrackResponse(json);
 
@@ -105,11 +105,11 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-    try {
-      Log.d(TAG, "Using json: " + json.toString(4));
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
+//    try {
+//      Log.d(TAG, "Using json: " + json.toString(4));
+//    } catch (JSONException e) {
+//      e.printStackTrace();
+//    }
 
     // Now let's parse for the artist pic
     imageUrl = retrieveUrlFromLastFmArtistResponse(json);

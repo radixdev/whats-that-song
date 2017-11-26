@@ -148,25 +148,47 @@ public class SongStorageThing {
       return;
     }
 
-    Location loc = new Location("");
-    loc.setLatitude(40.749153d);
-    loc.setLongitude(-73.996565d);
+    List<String> songNames = new ArrayList<>();
+    songNames.add("I Am a Rock by Simon and Garfunkel");
+    songNames.add("I'm Not In Love by 10cc");
+    songNames.add("New Freezer by Rich the Kid");
+    songNames.add("Broke by Lecrae");
+    songNames.add("Lost Boy by Jaden Smith");
+    songNames.add("Bust Down by Trippie Redd");
+
+    List<Location> locations = new ArrayList<>();
+    Location location = new Location("");
+    location.setLatitude(40.749153d);
+    location.setLongitude(-73.996565d);
+    locations.add(location);
+
+    location = new Location("");
+    location.setLatitude(40.747215d);
+    location.setLongitude(-73.9981112d);
+    locations.add(location);
+
+    location = new Location("");
+    location.setLatitude(40.754755d);
+    location.setLongitude(-73.993230d);
+    locations.add(location);
+
+    location = new Location("");
+    location.setLatitude(40.756527d);
+    location.setLongitude(-73.997736d);
+    locations.add(location);
+
+    location = new Location("");
+    location.setLatitude(40.746303d);
+    location.setLongitude(-74.003861d);
+    locations.add(location);
+
     final long postTime = System.currentTimeMillis() / 1000L;
-    Song fakeSong1 = new Song("i am a rock by simon and garfunkel", postTime, loc);
-    storeSong(fakeSong1);
 
-    loc.setLatitude(40.747215d);
-    loc.setLongitude(-73.9981112d);
-    Song fakeSong2 = new Song("test song by gucci mane", 100 + postTime, loc);
-    storeSong(fakeSong2);
-
-    Song fakeSong3 = new Song("super duper long song name that has no business being this long by an even longer artist with an even longer name but not by much", 200 + postTime, null);
-    storeSong(fakeSong3);
-
-    loc.setLatitude(40.747215d);
-    loc.setLongitude(-73.9981112d);
-    fakeSong1 = new Song("New Freezer by Rich the Kid", 300 + postTime, loc);
-    storeSong(fakeSong1);
+    for (int i = 0; i < songNames.size(); i++) {
+      Location loc = locations.get(i % locations.size());
+      Song fakeSong1 = new Song(songNames.get(i), postTime + i + 100L, loc);
+      storeSong(fakeSong1);
+    }
   }
 
   /**
