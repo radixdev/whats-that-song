@@ -39,6 +39,12 @@ public class ClickHandlerProvider {
 
       case "pandora":
         return new PandoraClickHandler();
+
+      case "youtube_music":
+        return new YoutubeMusicClickHandler();
+
+      case "deezer":
+        return new DeezerClickHandler();
     }
     return new DefaultClickHandler();
   }

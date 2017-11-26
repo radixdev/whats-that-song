@@ -16,6 +16,8 @@
         <item>Google Play Music</item>
         <item>SoundCloud</item>
         <item>Pandora</item>
+        <item>Youtube Music</item>
+        <item>Deezer</item>
     </string-array>
     <string-array name="music_players_value">
         <item>default</item>
@@ -24,6 +26,8 @@
         <item>google_play_music</item>
         <item>soundcloud</item>
         <item>pandora</item>
+        <item>youtube_music</item>
+        <item>deezer</item>
     </string-array>
 
     <string-array name="song_long_press_options">
