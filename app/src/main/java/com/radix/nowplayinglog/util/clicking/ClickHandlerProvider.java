@@ -33,6 +33,9 @@ public class ClickHandlerProvider {
 
       case "google_play_music":
         return new GooglePlayMusicClickHandler();
+
+      case "soundcloud":
+        return new SoundcloudClickHandler();
     }
     return new DefaultClickHandler();
   }
