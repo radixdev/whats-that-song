@@ -26,14 +26,12 @@ import com.google.android.gms.drive.CreateFileActivityOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveClient;
 import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.radix.nowplayinglog.fragments.SettingsFragment;
 import com.radix.nowplayinglog.fragments.SongListFragment;
 import com.radix.nowplayinglog.fragments.SongMapFragment;
@@ -56,9 +54,9 @@ public class MainActivity extends AppCompatActivity
   /**
    * Request code for google sign-in
    */
-  private static final int REQUEST_CODE_SIGN_IN = 65536;
+  private static final int REQUEST_CODE_SIGN_IN = 2;
 
-  private static final int REQUEST_CODE_CREATE_FILE = 242424;
+  private static final int REQUEST_CODE_CREATE_FILE = 1;
 
   /**
    * Handles high-level drive functions like sync
@@ -71,11 +69,6 @@ public class MainActivity extends AppCompatActivity
    * Handle access to Drive resources/files.
    */
   private DriveResourceClient mDriveResourceClient;
-
-  /**
-   * Tracks completion of the drive picker
-   */
-  private TaskCompletionSource<DriveId> mOpenItemTaskSource;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +84,8 @@ public class MainActivity extends AppCompatActivity
 
     mBottomNavigation = findViewById(R.id.navigation);
     mBottomNavigation.setOnNavigationItemSelectedListener(this);
-    mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
+//    mBottomNavigation.setSelectedItemId(R.id.navigation_all_songs);
+    mBottomNavigation.setSelectedItemId(R.id.navigation_settings);
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -254,9 +248,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("New file")
+                .setTitle("Now Playing Log Backup")
                 .setMimeType("text/plain")
-                .setStarred(true)
                 .build();
 
             CreateFileActivityOptions createOptions =
@@ -277,7 +270,6 @@ public class MainActivity extends AppCompatActivity
                 } catch (IntentSender.SendIntentException e) {
                   Log.e(TAG, "Unable to create file", e);
                   showMessage(getString(R.string.file_create_error));
-                  finish();
                 }
               }
             })

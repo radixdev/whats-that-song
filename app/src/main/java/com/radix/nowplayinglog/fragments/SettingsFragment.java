@@ -30,6 +30,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     mSettingsPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_map_key));
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_music_player_key));
+
+    findPreference(getString(R.string.settings_google_drive_backup_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+      @Override
+      public boolean onPreferenceClick(Preference preference) {
+        mSettingsButtonClickedCallback.onGoogleDriveBackupClicked();
+        return true;
+      }
+    });
   }
 
   @Override
@@ -49,11 +57,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
       if (key.equals(getString(R.string.settings_music_player_key))) {
         String value = (String) listPreference.getEntry();
         preference.setSummary("Music player set to: " + value);
-      }
-    } else {
-      // It's just a button...
-      if (key.equals(getString(R.string.settings_google_drive_backup_key))) {
-        mSettingsButtonClickedCallback.onGoogleDriveBackupClicked();
       }
     }
   }
