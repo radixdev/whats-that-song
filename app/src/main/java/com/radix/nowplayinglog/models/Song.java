@@ -82,6 +82,10 @@ public class Song {
     return mTitle + " by " + mArtist;
   }
 
+  public String getLatLngForDisplay() {
+    return "(" + mLatitude + ", " + mLongitude + ")";
+  }
+
   public String getId() {
     return mId;
   }
@@ -121,7 +125,7 @@ public class Song {
   public String getPrettyDate() {
     Calendar cal = Calendar.getInstance(Locale.US);
     cal.setTimeInMillis(mPostTime * 1000L);
-    return DateFormat.format("MMMM-dd hh:mm aa", cal).toString();
+    return DateFormat.format("MMMM dd hh:mm aa", cal).toString();
   }
 
   @Override

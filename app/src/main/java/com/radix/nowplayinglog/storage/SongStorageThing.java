@@ -121,6 +121,16 @@ public class SongStorageThing {
     return currentSong.equals(lastSong);
   }
 
+  public boolean isStorageEmpty() {
+    return mSongStore.getAll().isEmpty();
+  }
+
+  public String getNumberOfStoredSongsForDisplay() {
+    int numSongs = mSongStore.getAll().size();
+    String suffix = numSongs == 1 ? "song" : "songs";
+    return "(" + numSongs + " " + suffix + ")";
+  }
+
   private static Song getSongFromJsonBody(String songId, String jsonBody) {
     try {
       JSONObject songJson = new JSONObject(jsonBody);

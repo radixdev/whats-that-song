@@ -23,7 +23,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.radix.nowplayinglog.R;
+import com.radix.nowplayinglog.models.Song;
+import com.radix.nowplayinglog.storage.SongStorageThing;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -32,20 +35,15 @@ import static android.app.Activity.RESULT_OK;
 
 public class GoogleDriveBackupHandler {
   private static final String TAG = GoogleDriveBackupHandler.class.getName();
-  private Activity mActivity;
-  private Context mContext;
-
-  public GoogleDriveBackupHandler(Activity activity) {
-    mActivity = activity;
-    mContext = mActivity.getApplicationContext();
-  }
-
   /**
    * Request code for google sign-in
    */
   private static final int REQUEST_CODE_SIGN_IN = 2;
 
   private static final int REQUEST_CODE_CREATE_FILE = 1;
+
+  private final Activity mActivity;
+  private final Context mContext;
 
   /**
    * Handles high-level drive functions like sync
@@ -56,6 +54,14 @@ public class GoogleDriveBackupHandler {
    * Handle access to Drive resources/files.
    */
   private DriveResourceClient mDriveResourceClient;
+
+  private final SongStorageThing mSongStorage;
+
+  public GoogleDriveBackupHandler(Activity activity) {
+    mActivity = activity;
+    mContext = mActivity.getApplicationContext();
+    mSongStorage = new SongStorageThing(mContext);
+  }
 
   /**
    * Callback for the real {@link Activity#onActivityResult(int, int, Intent)}
@@ -85,6 +91,10 @@ public class GoogleDriveBackupHandler {
 
   public void startBackup() {
     Log.i(TAG, "Starting sign in");
+    if (mSongStorage.isStorageEmpty()) {
+      showMessage("No songs to backup!");
+      return;
+    }
     GoogleSignInClient mGoogleSignInClient = buildGoogleSignInClient();
     mActivity.startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
   }
@@ -99,11 +109,11 @@ public class GoogleDriveBackupHandler {
             DriveContents contents = task.getResult();
             OutputStream outputStream = contents.getOutputStream();
             try (Writer writer = new OutputStreamWriter(outputStream)) {
-              writer.write("Hello World!");
+              writeSongDataToFile(writer);
             }
 
             MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                .setTitle("Now Playing Log Backup")
+                .setTitle("Now Playing Log Backup " + mSongStorage.getNumberOfStoredSongsForDisplay())
                 .setMimeType("text/plain")
                 .build();
 
@@ -135,6 +145,18 @@ public class GoogleDriveBackupHandler {
             showMessage(mContext.getString(R.string.file_create_error));
           }
         });
+  }
+
+  private void writeSongDataToFile(Writer writer) throws IOException {
+    for (Song song : mSongStorage.getAllSongs()) {
+      String songLine = song.getTitleAndArtistForDisplay() + " on " + song.getPrettyDate();
+      if (song.hasLocationSet()) {
+        songLine += " at " + song.getLatLngForDisplay();
+      }
+
+      writer.write(songLine);
+      writer.write("\n");
+    }
   }
 
   private void initializeDriveClient(GoogleSignInAccount signInAccount) {
