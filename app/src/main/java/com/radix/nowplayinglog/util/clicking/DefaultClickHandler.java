@@ -8,9 +8,6 @@ import android.util.Log;
 
 import com.radix.nowplayinglog.models.Song;
 
-/**
- *
- */
 public class DefaultClickHandler implements ISongClickHandler {
   private static final String TAG = DefaultClickHandler.class.getName();
 

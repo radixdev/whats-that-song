@@ -125,6 +125,7 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   private void showAllSongsOnMap() {
     // Add all the known songs to the map
     List<Song> allSongs = mSongStorageThing.getAllSongs();
+    SongSorter.removeSongsWithoutLocationSet(allSongs);
     if (allSongs.isEmpty()) {
       Log.i(TAG, "No songs available, returning");
       return;
