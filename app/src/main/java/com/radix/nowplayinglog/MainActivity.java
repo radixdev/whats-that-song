@@ -46,7 +46,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 public class MainActivity extends AppCompatActivity
-    implements BottomNavigationView.OnNavigationItemSelectedListener, SongListFragment.OnSongMapIconPressedListener {
+    implements BottomNavigationView.OnNavigationItemSelectedListener, SongListFragment.OnSongMapIconPressedListener,
+    SettingsFragment.OnSettingsButtonClickedListener {
 
   private static final String TAG = MainActivity.class.getName();
   private ViewPager mViewPager;
@@ -150,6 +151,12 @@ public class MainActivity extends AppCompatActivity
     if (songMapFragment != null) {
       songMapFragment.centerMapOnSong(song);
     }
+  }
+
+  @Override
+  public void onGoogleDriveBackupClicked() {
+    Log.d(TAG, "On Google Drive backup clicked");
+    startBackup();
   }
 
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

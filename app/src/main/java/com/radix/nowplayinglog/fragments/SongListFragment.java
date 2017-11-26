@@ -27,7 +27,6 @@ public class SongListFragment extends Fragment {
   }
 
   private OnSongMapIconPressedListener mSongClickCallback;
-
   private RecyclerView mRecyclerView;
   private SongStorageThing mSongStorageThing;
   private SongListAdapter mAdapter;

@@ -1,6 +1,7 @@
 package com.radix.nowplayinglog.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -16,7 +17,12 @@ import com.radix.nowplayinglog.util.PermissionUtils;
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
-  SharedPreferences mSettingsPrefs;
+  public interface OnSettingsButtonClickedListener {
+    void onGoogleDriveBackupClicked();
+  }
+
+  private OnSettingsButtonClickedListener mSettingsButtonClickedCallback;
+  private SharedPreferences mSettingsPrefs;
 
   @Override
   public void onCreatePreferences(Bundle bundle, String s) {
@@ -46,7 +52,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
       }
     } else {
       // It's just a button...
-
+      if (key.equals(getString(R.string.settings_google_drive_backup_key))) {
+        mSettingsButtonClickedCallback.onGoogleDriveBackupClicked();
+      }
     }
   }
 
@@ -64,6 +72,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     //unregister the preference change listener
     getPreferenceScreen().getSharedPreferences()
         .unregisterOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+
+    // This makes sure that the container activity has implemented
+    // the callback interface. If not, it throws an exception
+    try {
+      mSettingsButtonClickedCallback = (OnSettingsButtonClickedListener) getActivity();
+    } catch (ClassCastException e) {
+      throw new ClassCastException(getActivity().toString()
+          + " must implement OnSettingsButtonClickedListener");
+    }
   }
 
   public void getPermissionToReadLocation() {
