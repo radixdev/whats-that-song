@@ -182,11 +182,11 @@ public class SongStorageThing {
     location.setLongitude(-74.003861d);
     locations.add(location);
 
-    final long postTime = System.currentTimeMillis() / 1000L;
+    final long postTime = System.currentTimeMillis();
 
     for (int i = 0; i < songNames.size(); i++) {
       Location loc = locations.get(i % locations.size());
-      Song fakeSong1 = new Song(songNames.get(i), postTime + i + 100L, loc);
+      Song fakeSong1 = new Song(songNames.get(i), postTime + i + 1000L, loc);
       storeSong(fakeSong1);
     }
   }

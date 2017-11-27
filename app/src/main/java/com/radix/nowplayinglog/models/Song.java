@@ -124,7 +124,7 @@ public class Song {
 
   public String getPrettyDate() {
     Calendar cal = Calendar.getInstance(Locale.US);
-    cal.setTimeInMillis(mPostTime * 1000L);
+    cal.setTimeInMillis(mPostTime);
     return DateFormat.format("MMMM dd hh:mm aa", cal).toString();
   }
 
