@@ -35,7 +35,7 @@ public class SongStorageThing {
     mSongLastPosted = context.getSharedPreferences(SONG_LAST_POSTED_PREFS_LOCATION, Context.MODE_PRIVATE);
 
 //    correctAllSongsInStorage();
-//    addTestSongs();
+    addTestSongs();
   }
 
   public List<Song> getAllSongs() {
