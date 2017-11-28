@@ -15,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.radix.nowplayinglog.R;
-import com.radix.nowplayinglog.util.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.fragments.swiping.ItemTouchHelperAdapter;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
+import com.radix.nowplayinglog.util.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.SongSorter;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;

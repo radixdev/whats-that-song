@@ -27,14 +27,33 @@ public class ScrobblerHandler {
   public void sendScrobbleRequest(Song song) {
     try {
       // https://github.com/tgwizard/sls/wiki/Developer's-API
-      Intent bCast = new Intent("com.adam.aslfms.notify.playstatechanged");
-      bCast.putExtra("state", 0);
-      bCast.putExtra("app-name", "Now Playing Log");
-      bCast.putExtra("app-package", mContext.getPackageName());
-      bCast.putExtra("artist", song.getArtist());
-      bCast.putExtra("track", song.getTitle());
-      bCast.putExtra("duration", 30);
-      mContext.sendBroadcast(bCast);
+      Intent startBroadcast = new Intent("com.adam.aslfms.notify.playstatechanged");
+      startBroadcast.putExtra("state", 0);
+      startBroadcast.putExtra("app-name", "Now Playing Log");
+      startBroadcast.putExtra("app-package", mContext.getPackageName());
+      startBroadcast.putExtra("artist", song.getArtist());
+      startBroadcast.putExtra("track", song.getTitle());
+      startBroadcast.putExtra("duration", 30);
+
+      final Intent endBroadcast = new Intent("com.adam.aslfms.notify.playstatechanged");
+      endBroadcast.putExtra("state", 3);
+      endBroadcast.putExtra("app-name", "Now Playing Log");
+      endBroadcast.putExtra("app-package", mContext.getPackageName());
+      endBroadcast.putExtra("artist", song.getArtist());
+      endBroadcast.putExtra("track", song.getTitle());
+      endBroadcast.putExtra("duration", 30);
+
+      mContext.sendBroadcast(startBroadcast);
+      android.os.Handler handler = new android.os.Handler();
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            mContext.sendBroadcast(endBroadcast);
+          } catch (Exception e){}
+        }
+      }, 31 * 1000L);
+      Log.d(TAG, "Sent scrobble");
     } catch (Exception e) {
       Log.e(TAG, "Failed to scrobble", e);
     }
