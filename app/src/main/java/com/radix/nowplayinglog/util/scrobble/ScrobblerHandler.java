@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -36,6 +37,16 @@ public class ScrobblerHandler {
       mContext.sendBroadcast(bCast);
     } catch (Exception e) {
       Log.e(TAG, "Failed to scrobble", e);
+    }
+  }
+
+  public void takeUserToScrobbleApp() {
+    // from https://stackoverflow.com/a/27032821
+    final String appPackageName = Constants.SCROBBLER_PACKAGE_NAME;
+    try {
+      mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+    } catch (android.content.ActivityNotFoundException anfe) {
+      mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
     }
   }
 

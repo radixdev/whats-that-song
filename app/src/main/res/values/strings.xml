@@ -27,4 +27,7 @@
     <string name="enable_notification_listener_title">Please Enable Notification Access</string>
     <string name="enable_notification_listener_message">Now Playing Log requires Notification Access to watch
         for the \'Google Now Playing\' notification. Please enable it in Settings.</string>
+
+    <string name="enable_scrobble_app_title">Requires \"Simple Last.fm Scrobbler\"</string>
+    <string name="enable_scrobble_app_message">This requires the free app \"Simple Last.fm Scrobbler\" from the Play Store to be installed.</string>
 </resources>

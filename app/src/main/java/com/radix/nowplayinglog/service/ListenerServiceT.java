@@ -34,7 +34,7 @@ public class ListenerServiceT extends NotificationListenerService {
   public void onCreate() {
     super.onCreate();
     mSongStorage = new SongStorageThing(getApplicationContext());
-
+    mScrobblerHandler = new ScrobblerHandler(getApplicationContext());
     Log.d(TAG, "listener created");
   }
 

@@ -1,7 +1,9 @@
 package com.radix.nowplayinglog.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -13,6 +15,7 @@ import android.support.v7.preference.PreferenceManager;
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.PermissionUtils;
+import com.radix.nowplayinglog.util.scrobble.ScrobblerHandler;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
   private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -23,14 +26,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
   private OnSettingsButtonClickedListener mSettingsButtonClickedCallback;
   private SharedPreferences mSettingsPrefs;
+  private ScrobblerHandler mScrobblerHandler;
 
   @Override
   public void onCreatePreferences(Bundle bundle, String s) {
     addPreferencesFromResource(R.xml.settings_preferences);
+    mScrobblerHandler = new ScrobblerHandler(getContext());
     mSettingsPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_map_key));
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_music_player_key));
-    onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_scrobble_app_key));
 
     findPreference(getString(R.string.settings_google_drive_backup_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override
@@ -50,12 +54,31 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
       if (key.equals(getString(R.string.settings_map_key))) {
         // Ask for the permission if needed
         if (checkBoxPreference.isChecked()) {
-          // TODO: 11/27/2017 Uncheck the box if this is revoked! 
+          // TODO: 11/27/2017 Uncheck the box if this is revoked!
           getPermissionToReadLocation();
         }
       } else if (key.equals(getString(R.string.settings_scrobble_app_key))) {
         // Show a dialog if they don't have the app
-
+        if (checkBoxPreference.isChecked() && !mScrobblerHandler.isScrobblerAppInstalled()) {
+          checkBoxPreference.setChecked(false);
+          final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+          alert.setTitle(getString(R.string.enable_scrobble_app_title));
+          alert.setMessage(getString(R.string.enable_scrobble_app_message));
+          alert.setPositiveButton("Take me to the Play Store", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              mScrobblerHandler.takeUserToScrobbleApp();
+              dialog.dismiss();
+            }
+          });
+          alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.dismiss();
+            }
+          });
+          alert.show();
+        }
       }
     } else if (preference instanceof ListPreference) {
       ListPreference listPreference = (ListPreference) preference;
