@@ -30,6 +30,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     mSettingsPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_map_key));
     onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_music_player_key));
+    onSharedPreferenceChanged(mSettingsPrefs, getString(R.string.settings_scrobble_app_key));
 
     findPreference(getString(R.string.settings_google_drive_backup_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override
@@ -49,8 +50,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
       if (key.equals(getString(R.string.settings_map_key))) {
         // Ask for the permission if needed
         if (checkBoxPreference.isChecked()) {
+          // TODO: 11/27/2017 Uncheck the box if this is revoked! 
           getPermissionToReadLocation();
         }
+      } else if (key.equals(getString(R.string.settings_scrobble_app_key))) {
+        // Show a dialog if they don't have the app
+
       }
     } else if (preference instanceof ListPreference) {
       ListPreference listPreference = (ListPreference) preference;

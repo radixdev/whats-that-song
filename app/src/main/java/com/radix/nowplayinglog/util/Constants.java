@@ -11,4 +11,5 @@ public class Constants {
 
   // Identifier for the permission request
   public static final int READ_LOCATION_PERMISSIONS_REQUEST = 1;
+  public static final String SCROBBLER_PACKAGE_NAME = "com.adam.aslfms";
 }

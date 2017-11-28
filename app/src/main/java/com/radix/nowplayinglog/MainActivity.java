@@ -206,9 +206,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Fragment getItem(int position) {
       switch (position) {
-        case 0:
-          mMapFragment = new SongMapFragment();
-          return mMapFragment;
+//        case 0:
+//          mMapFragment = new SongMapFragment();
+//          return mMapFragment;
 
         case 1:
           return new SongListFragment();

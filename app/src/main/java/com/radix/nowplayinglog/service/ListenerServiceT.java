@@ -23,10 +23,12 @@ import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
 import com.radix.nowplayinglog.util.PermissionUtils;
+import com.radix.nowplayinglog.util.scrobble.ScrobblerHandler;
 
 public class ListenerServiceT extends NotificationListenerService {
   private static String TAG = ListenerServiceT.class.getName();
   private SongStorageThing mSongStorage;
+  private ScrobblerHandler mScrobblerHandler;
 
   @Override
   public void onCreate() {
@@ -90,6 +92,7 @@ public class ListenerServiceT extends NotificationListenerService {
    * Takes a complete song object and publishes it to the list and to storage.
    */
   private void publishSong(Song song) {
+    Log.d(TAG, "Broadcasting song: " + song);
     // Now store it
     mSongStorage.storeSong(song);
 
@@ -97,7 +100,12 @@ public class ListenerServiceT extends NotificationListenerService {
     Intent caughtSongIntent = new Intent(Constants.NEW_SONG_BROADCAST_FILTER);
     caughtSongIntent.putExtra(Constants.BROADCAST_FILTER_SONG_ID, song.getId());
     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(caughtSongIntent);
-    Log.d(TAG, "broadcast song: " + song);
+
+    // Scrobble it maybe
+    if (mScrobblerHandler.shouldScrobble()) {
+      mScrobblerHandler.sendScrobbleRequest(song);
+    }
+    Log.d(TAG, "Finishing Broadcast song");
   }
 
   @Override

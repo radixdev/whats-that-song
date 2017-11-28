@@ -24,5 +24,11 @@
             android:key="@string/settings_google_drive_backup_key"
             android:summary=""
             android:icon="@drawable/ic_backup_black_48dp"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_timeline_black_48dp"
+            android:key="@string/settings_scrobble_app_key"
+            android:summary="@string/settings_scrobble_app_summary"
+            android:title="@string/settings_scrobble_app_title"/>
     </PreferenceCategory>
 </PreferenceScreen>

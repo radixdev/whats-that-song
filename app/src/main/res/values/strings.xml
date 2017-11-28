@@ -17,6 +17,10 @@
     <string name="settings_google_drive_backup_key">settings_google_drive_backup</string>
     <string name="settings_google_drive_backup_title">Backup To Google Drive</string>
 
+    <string name="settings_scrobble_app_key">settings_scrobble_app</string>
+    <string name="settings_scrobble_app_title">Enable Scrobbling</string>
+    <string name="settings_scrobble_app_summary">Requires \"Simple Last.fm Scrobbler\"</string>
+
     <string name="google_maps_key">AIzaSyB_fGqsb1AJmf6A52ENKOmL-Xms8hSzY3E</string>
     <string name="file_create_error">Unable to create Google Drive backup file</string>
 
