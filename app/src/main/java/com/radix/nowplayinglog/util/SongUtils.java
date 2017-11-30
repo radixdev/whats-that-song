@@ -36,6 +36,7 @@ public class SongUtils {
   public static List<String> getArtistsFromSong(String fullArtist) {
     // "Migos, Nicki Minaj & Cardi B" is fucking tough
     // "A, B & C" -> "A ~ B ~ C"
+    // where ~ is some delimiter
     List<String> artists = new ArrayList<>();
 
     String customDelimiter = "||||||||||||||||||||";

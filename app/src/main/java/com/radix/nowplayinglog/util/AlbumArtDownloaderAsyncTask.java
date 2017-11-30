@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -77,14 +78,26 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-    imageUrl = parseUrlFromSongArtist();
+    imageUrl = parseUrlFromSongArtist(mSong.getTitle(), mSong.getArtist());
     if (imageUrl != null) {
       addImageUrlToCache(mSong, imageUrl);
       return imageUrl;
     }
 
-    // At this point, we're kinda fucked. The title & artist combo BOTH messed up.
-    // Let's either draw a placeholder or try to further parse the artist
+    Log.d(TAG, "Still could not find track image, parsing through the artist list serially instead");
+    if (isCancelled()) {
+      Log.d(TAG, "Job was cancelled, stop early");
+      return null;
+    }
+
+    imageUrl = parseUrlFromMultipleSongArtists(mSong.getArtist());
+    if (imageUrl != null) {
+      addImageUrlToCache(mSong, imageUrl);
+      return imageUrl;
+    }
+
+    // At this point, we're kinda fucked. The title and artist combo are BOTH messed up.
+    // Let's draw a placeholder
     return null;
   }
 
@@ -136,8 +149,8 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     return retrieveUrlFromLastFmTrackResponse(json);
   }
 
-  private String parseUrlFromSongArtist() {
-    final String lastFmUrlForArtist = getLastFmUrlForSong(mSong.getTitle(), mSong.getArtist(), false);
+  private static String parseUrlFromSongArtist(String songTitle, String songArtist) {
+    final String lastFmUrlForArtist = getLastFmUrlForSong(songTitle, songArtist, false);
     Log.d(TAG, "Using song artist url " + lastFmUrlForArtist);
     Request request = new Request.Builder()
         .url(lastFmUrlForArtist).build();
@@ -154,8 +167,22 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   /**
    * Try to parse out each artist in succession.
    */
-  private String parseUrlFromMultipleSongArtists() {
-    String fullArtistString = mSong.getArtist();
+  private static String parseUrlFromMultipleSongArtists(String songArtist) {
+    List<String> allArtists = SongUtils.getArtistsFromSong(songArtist);
+    if (allArtists.isEmpty()) {
+      Log.d(TAG, "Artist list was empty. Returning.");
+      return null;
+    }
+
+    Log.d(TAG, "Running through the full artist list to find an image");
+    for (String artist : allArtists) {
+      Log.d(TAG, "Trying to use artist for image: " + artist);
+      String imageUrl = parseUrlFromSongArtist("", artist);
+      if (imageUrl != null) {
+        return imageUrl;
+      }
+    }
+
     return "";
   }
 
