@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class SongUtils {
   public static void sortSongs(List<Song> songs) {
@@ -39,16 +38,13 @@ public class SongUtils {
     // where ~ is some delimiter
     List<String> artists = new ArrayList<>();
 
-    String customDelimiter = "||||||||||||||||||||";
+    String customDelimiter = "\n";
     fullArtist = fullArtist.replace(",", customDelimiter);
     fullArtist = fullArtist.replace("&", customDelimiter);
 
-    StringTokenizer tokenizer = new StringTokenizer(fullArtist, customDelimiter);
-
-    // Now split on this string
-    while (tokenizer.hasMoreTokens()) {
-      final String artist = tokenizer.nextToken();
-      artists.add(artist.trim());
+    String[] splitArtists = fullArtist.split(customDelimiter);
+    for (String splitArtist : splitArtists) {
+      artists.add(splitArtist.trim());
     }
 
     return artists;

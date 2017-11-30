@@ -33,4 +33,15 @@ public class SongUtilsTest {
     assertEquals("N.E.R.D", allArtists.get(0));
     assertEquals("Rihanna", allArtists.get(1));
   }
+
+  @Test
+  public void testGetArtistsFromSongWithBar() {
+    String fullArtist = "Artist A & Artist B & OMG | WTF";
+    List<String> allArtists = SongUtils.getArtistsFromSong(fullArtist);
+
+    assertEquals(3, allArtists.size());
+    assertEquals("Artist A", allArtists.get(0));
+    assertEquals("Artist B", allArtists.get(1));
+    assertEquals("OMG | WTF", allArtists.get(2));
+  }
 }
