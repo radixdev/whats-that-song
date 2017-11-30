@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
 
 import org.json.JSONArray;
@@ -89,9 +90,19 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   @Override
   protected void onPostExecute(String imageUrl) {
-    if (imageUrl != null && !imageUrl.equals("") && !isCancelled()) {
+    if (isCancelled()) {
+      return;
+    }
+    if (imageUrl != null && !imageUrl.equals("")) {
+      // Valid URL given, load it
       Glide.with(mContext)
           .load(imageUrl)
+          .into(mImageView);
+    } else {
+      Log.d(TAG, "Could not load image into imageview. Using fallback. " + mSong);
+      Glide.with(mContext)
+          .asDrawable()
+          .load(R.drawable.logo)
           .into(mImageView);
     }
   }
@@ -152,8 +163,12 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     return retrieveUrlFromLastFmArtistResponse(json);
   }
 
+  /**
+   *
+   * @return
+   */
   private String parseUrlFromMultipleSongArtists() {
-    
+    return "";
   }
 
   private static JSONObject getJsonDataFromRequest(Request request) {
