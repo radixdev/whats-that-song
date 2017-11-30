@@ -122,7 +122,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   }
 
   private String parseUrlFromSongTitle() {
-    final String lastFmUrlForSong = getLastFmUrlForSong(mSong, true);
+    final String lastFmUrlForSong = getLastFmUrlForSong(mSong.getTitle(), mSong.getArtist(), true);
     Log.d(TAG, "Using url " + lastFmUrlForSong);
     Request request = new Request.Builder()
         .url(lastFmUrlForSong).build();
@@ -132,18 +132,12 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-//    try {
-//      Log.v(TAG, "Using json: " + json.toString(4));
-//    } catch (JSONException e) {
-//      e.printStackTrace();
-//    }
-
     // Now let's parse
     return retrieveUrlFromLastFmTrackResponse(json);
   }
 
   private String parseUrlFromSongArtist() {
-    final String lastFmUrlForArtist = getLastFmUrlForSong(mSong, false);
+    final String lastFmUrlForArtist = getLastFmUrlForSong(mSong.getTitle(), mSong.getArtist(), false);
     Log.d(TAG, "Using artist url " + lastFmUrlForArtist);
     Request request = new Request.Builder()
         .url(lastFmUrlForArtist).build();
@@ -153,19 +147,12 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-//    try {
-//      Log.d(TAG, "Using json: " + json.toString(4));
-//    } catch (JSONException e) {
-//      e.printStackTrace();
-//    }
-
     // Now let's parse for the artist pic
     return retrieveUrlFromLastFmArtistResponse(json);
   }
 
   /**
-   *
-   * @return
+   * Try to parse out each artist in succession.
    */
   private String parseUrlFromMultipleSongArtists() {
     return "";
@@ -253,29 +240,27 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     return bestImageUrl;
   }
 
-  private static String getLastFmUrlForSong(Song song, boolean isTrackSearch) {
+  private static String getLastFmUrlForSong(String songTitle, String songArtist, boolean isTrackSearch) {
     // http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=API_KEY&artist=cher&track=believe&format=json
     // or
     // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
 
     // "Migos, Nicki Minaj & Cardi B" is fucking tough
-    String artist = song.getArtist();
-    int lastComma = artist.lastIndexOf(",");
-    int lastAmpersand = artist.lastIndexOf("&");
+    int lastComma = songArtist.lastIndexOf(",");
+    int lastAmpersand = songArtist.lastIndexOf("&");
 
     final int minBadChar = Math.min(lastComma, lastAmpersand);
     String urlSafeArtist;
 
     if (minBadChar == -1) {
-      urlSafeArtist = artist;
+      urlSafeArtist = songArtist;
     } else {
-      urlSafeArtist = artist.substring(0, minBadChar);
+      urlSafeArtist = songArtist.substring(0, minBadChar);
     }
-    String urlSafeTitle = song.getTitle();
     if (isTrackSearch) {
       return "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&format=json" +
           "&api_key=" + Constants.LAST_FM_API_KEY +
-          "&track=" + urlSafeTitle +
+          "&track=" + songTitle +
           "&artist=" + urlSafeArtist;
     } else {
       return "http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&format=json" +
@@ -284,24 +269,12 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     }
   }
 
-  private static String getLastFmUrlJustForArtist(String artist) {
-    // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
-
-    // "Migos, Nicki Minaj & Cardi B" is fucking tough
-    int lastComma = artist.lastIndexOf(",");
-    int lastAmpersand = artist.lastIndexOf("&");
-
-    final int minBadChar = Math.min(lastComma, lastAmpersand);
-    String urlSafeArtist;
-
-    if (minBadChar == -1) {
-      urlSafeArtist = artist;
-    } else {
-      urlSafeArtist = artist.substring(0, minBadChar);
+  private void printJson(JSONObject json) {
+    try {
+      Log.d(TAG, "Using json: " + json.toString(4));
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
-    return "http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&format=json" +
-        "&api_key=" + Constants.LAST_FM_API_KEY +
-        "&artist=" + urlSafeArtist;
   }
 
   @Override
