@@ -127,9 +127,9 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   }
 
   private String getImageUrlFromCache(Song song) {
-//    if (mImageUrlCache.contains(song.getId())) {
-//      return mImageUrlCache.getString(song.getId(), null);
-//    }
+    if (mImageUrlCache.contains(song.getId())) {
+      return mImageUrlCache.getString(song.getId(), null);
+    }
 
     return null;
   }
