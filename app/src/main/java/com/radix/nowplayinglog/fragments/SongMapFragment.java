@@ -28,7 +28,7 @@ import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.Constants;
-import com.radix.nowplayinglog.util.SongSorter;
+import com.radix.nowplayinglog.util.SongUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,12 +125,12 @@ public class SongMapFragment extends Fragment implements OnMapReadyCallback {
   private void showAllSongsOnMap() {
     // Add all the known songs to the map
     List<Song> allSongs = mSongStorageThing.getAllSongs();
-    SongSorter.removeSongsWithoutLocationSet(allSongs);
+    SongUtils.removeSongsWithoutLocationSet(allSongs);
     if (allSongs.isEmpty()) {
       Log.i(TAG, "No songs available, returning");
       return;
     }
-    SongSorter.sortSongs(allSongs);
+    SongUtils.sortSongs(allSongs);
 
     // Add all the markers
     for (Song song : allSongs) {

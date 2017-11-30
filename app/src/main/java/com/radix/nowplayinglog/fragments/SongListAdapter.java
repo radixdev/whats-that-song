@@ -20,7 +20,7 @@ import com.radix.nowplayinglog.models.Song;
 import com.radix.nowplayinglog.storage.SongStorageThing;
 import com.radix.nowplayinglog.util.AlbumArtDownloaderAsyncTask;
 import com.radix.nowplayinglog.util.Constants;
-import com.radix.nowplayinglog.util.SongSorter;
+import com.radix.nowplayinglog.util.SongUtils;
 import com.radix.nowplayinglog.util.clicking.ClickHandlerProvider;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     mClickHandlerProvider = new ClickHandlerProvider(mContext);
     mSongMapClickCallback = songClickCallback;
 
-    SongSorter.sortSongs(mSongData);
+    SongUtils.sortSongs(mSongData);
 
     setHasStableIds(true);
   }

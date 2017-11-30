@@ -123,7 +123,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   private String parseUrlFromSongTitle() {
     final String lastFmUrlForSong = getLastFmUrlForSong(mSong.getTitle(), mSong.getArtist(), true);
-    Log.d(TAG, "Using url " + lastFmUrlForSong);
+    Log.d(TAG, "Using song title url " + lastFmUrlForSong);
     Request request = new Request.Builder()
         .url(lastFmUrlForSong).build();
 
@@ -138,7 +138,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   private String parseUrlFromSongArtist() {
     final String lastFmUrlForArtist = getLastFmUrlForSong(mSong.getTitle(), mSong.getArtist(), false);
-    Log.d(TAG, "Using artist url " + lastFmUrlForArtist);
+    Log.d(TAG, "Using song artist url " + lastFmUrlForArtist);
     Request request = new Request.Builder()
         .url(lastFmUrlForArtist).build();
 
@@ -155,6 +155,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
    * Try to parse out each artist in succession.
    */
   private String parseUrlFromMultipleSongArtists() {
+    String fullArtistString = mSong.getArtist();
     return "";
   }
 
@@ -269,7 +270,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
     }
   }
 
-  private void printJson(JSONObject json) {
+  private static void printJson(JSONObject json) {
     try {
       Log.d(TAG, "Using json: " + json.toString(4));
     } catch (JSONException e) {
