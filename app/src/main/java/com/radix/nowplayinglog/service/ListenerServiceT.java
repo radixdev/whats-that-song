@@ -80,8 +80,13 @@ public class ListenerServiceT extends NotificationListenerService {
     lastLocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
       @Override
       public void onSuccess(Location location) {
-        Song songWithLocation = new Song(existingSong, location);
-        publishSong(songWithLocation);
+        if (location != null) {
+          Song songWithLocation = new Song(existingSong, location);
+          publishSong(songWithLocation);
+        } else {
+          Log.e(TAG, "Location collection returned null using the fused location api for song. Publishing the regular version");
+          publishSong(existingSong);
+        }
       }
     });
 
