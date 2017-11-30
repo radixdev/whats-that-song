@@ -64,25 +64,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return imageUrl;
     }
 
-    // Try for the track art, then the artist art
-    final String lastFmUrlForSong = getLastFmUrlForSong(mSong, true);
-    Log.d(TAG, "Using url " + lastFmUrlForSong);
-    Request request = new Request.Builder()
-        .url(lastFmUrlForSong).build();
-
-    JSONObject json = getJsonDataFromRequest(request);
-    if (json == null) {
-      return null;
-    }
-
-//    try {
-//      Log.v(TAG, "Using json: " + json.toString(4));
-//    } catch (JSONException e) {
-//      e.printStackTrace();
-//    }
-    // Now let's parse
-    imageUrl = retrieveUrlFromLastFmTrackResponse(json);
-
+    imageUrl = parseUrlFromSongTitle();
     if (imageUrl != null) {
       addImageUrlToCache(mSong, imageUrl);
       return imageUrl;
@@ -94,27 +76,15 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       return null;
     }
 
-    // Attempt for the artist image then
-    final String lastFmUrlForArtist = getLastFmUrlForSong(mSong, false);
-    Log.d(TAG, "Using artist url " + lastFmUrlForSong);
-    request = new Request.Builder()
-        .url(lastFmUrlForArtist).build();
-
-    json = getJsonDataFromRequest(request);
-    if (json == null) {
-      return null;
+    imageUrl = parseUrlFromSongArtist();
+    if (imageUrl != null) {
+      addImageUrlToCache(mSong, imageUrl);
+      return imageUrl;
     }
 
-//    try {
-//      Log.d(TAG, "Using json: " + json.toString(4));
-//    } catch (JSONException e) {
-//      e.printStackTrace();
-//    }
-
-    // Now let's parse for the artist pic
-    imageUrl = retrieveUrlFromLastFmArtistResponse(json);
-    addImageUrlToCache(mSong, imageUrl);
-    return imageUrl;
+    // At this point, we're kinda fucked. The title & artist combo BOTH messed up.
+    // Let's either draw a placeholder or try to further parse the artist
+    return null;
   }
 
   @Override
@@ -133,11 +103,57 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   }
 
   private String getImageUrlFromCache(Song song) {
-    if (mImageUrlCache.contains(song.getId())) {
-      return mImageUrlCache.getString(song.getId(), null);
-    }
+//    if (mImageUrlCache.contains(song.getId())) {
+//      return mImageUrlCache.getString(song.getId(), null);
+//    }
 
     return null;
+  }
+
+  private String parseUrlFromSongTitle() {
+    final String lastFmUrlForSong = getLastFmUrlForSong(mSong, true);
+    Log.d(TAG, "Using url " + lastFmUrlForSong);
+    Request request = new Request.Builder()
+        .url(lastFmUrlForSong).build();
+
+    JSONObject json = getJsonDataFromRequest(request);
+    if (json == null) {
+      return null;
+    }
+
+//    try {
+//      Log.v(TAG, "Using json: " + json.toString(4));
+//    } catch (JSONException e) {
+//      e.printStackTrace();
+//    }
+
+    // Now let's parse
+    return retrieveUrlFromLastFmTrackResponse(json);
+  }
+
+  private String parseUrlFromSongArtist() {
+    final String lastFmUrlForArtist = getLastFmUrlForSong(mSong, false);
+    Log.d(TAG, "Using artist url " + lastFmUrlForArtist);
+    Request request = new Request.Builder()
+        .url(lastFmUrlForArtist).build();
+
+    JSONObject json = getJsonDataFromRequest(request);
+    if (json == null) {
+      return null;
+    }
+
+//    try {
+//      Log.d(TAG, "Using json: " + json.toString(4));
+//    } catch (JSONException e) {
+//      e.printStackTrace();
+//    }
+
+    // Now let's parse for the artist pic
+    return retrieveUrlFromLastFmArtistResponse(json);
+  }
+
+  private String parseUrlFromMultipleSongArtists() {
+    
   }
 
   private static JSONObject getJsonDataFromRequest(Request request) {
@@ -251,6 +267,26 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
           "&api_key=" + Constants.LAST_FM_API_KEY +
           "&artist=" + urlSafeArtist;
     }
+  }
+
+  private static String getLastFmUrlJustForArtist(String artist) {
+    // http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&api_key=YOUR_API_KEY&format=json
+
+    // "Migos, Nicki Minaj & Cardi B" is fucking tough
+    int lastComma = artist.lastIndexOf(",");
+    int lastAmpersand = artist.lastIndexOf("&");
+
+    final int minBadChar = Math.min(lastComma, lastAmpersand);
+    String urlSafeArtist;
+
+    if (minBadChar == -1) {
+      urlSafeArtist = artist;
+    } else {
+      urlSafeArtist = artist.substring(0, minBadChar);
+    }
+    return "http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&format=json" +
+        "&api_key=" + Constants.LAST_FM_API_KEY +
+        "&artist=" + urlSafeArtist;
   }
 
   @Override
