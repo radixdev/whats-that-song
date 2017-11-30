@@ -44,7 +44,13 @@ public class ListenerServiceT extends NotificationListenerService {
 
     if (sbn.getPackageName().equals(Constants.NOW_PLAYING_PACKAGE)) {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
-      final Song songWithoutLocation = new Song(notificationTitle, sbn.getPostTime(), null);
+      final Song songWithoutLocation;
+      try {
+        songWithoutLocation = new Song(notificationTitle, sbn.getPostTime(), null);
+      } catch (Exception e) {
+        Log.d(TAG, "Failed to create song. Returning. Notification: " + notificationTitle, e);
+        return;
+      }
       Log.d(TAG, "current song, before location: " +  songWithoutLocation);
 
       if (mSongStorage.isSongRepost(songWithoutLocation)) {

@@ -1,6 +1,7 @@
 package com.radix.nowplayinglog.models;
 
 import android.location.Location;
+import android.support.annotation.VisibleForTesting;
 import android.text.format.DateFormat;
 
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import java.util.Locale;
  * The song object
  */
 public class Song {
-  private static final String BY_DELIMITER = "by";
+  private static final String BY_DELIMITER = " by ";
   private static final double LOCATION_DEFAULT_VALUE = -1d;
 
   private final String mTitle;
@@ -29,7 +30,6 @@ public class Song {
    * Parses the title and artist from the notification.
    *
    * @param notificationTitle the title straight from the notification itself
-   * @param heardAtLocation
    */
   public Song(String notificationTitle, long postTime, Location heardAtLocation){
     // Don't want songs with "by" in the title to fuck it up
@@ -126,6 +126,16 @@ public class Song {
     Calendar cal = Calendar.getInstance(Locale.US);
     cal.setTimeInMillis(mPostTime);
     return DateFormat.format("MMMM dd hh:mm aa", cal).toString();
+  }
+
+  @VisibleForTesting
+  String getTitleFromNotificationString(String notificationString) {
+    return "";
+  }
+
+  @VisibleForTesting
+  String getArtistFromNotificationString(String notificationString) {
+    return "";
   }
 
   @Override
