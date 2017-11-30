@@ -261,7 +261,7 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
       if (sizeScore > bestSize && !imageUrl.trim().equals("")) {
         bestImageUrl = imageUrl;
         bestSize = sizeScore;
-        Log.d(TAG, "found best size of " + size);
+        Log.v(TAG, "found best size of " + size);
       }
     }
 
