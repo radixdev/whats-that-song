@@ -9,6 +9,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/song_list_card_top_margin"
-        android:clipToPadding="false"
-        android:background="#f0f0f0"/>
+        android:clipToPadding="false"/>
 </FrameLayout>

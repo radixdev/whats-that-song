@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    setTheme(R.style.AppTheme_Dark_NoActionBar);
     super.onCreate(savedInstanceState);
     //Remove title bar
     requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -206,9 +207,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Fragment getItem(int position) {
       switch (position) {
-        case 0:
-          mMapFragment = new SongMapFragment();
-          return mMapFragment;
+//        case 0:
+//          mMapFragment = new SongMapFragment();
+//          return mMapFragment;
 
         case 1:
           return new SongListFragment();
