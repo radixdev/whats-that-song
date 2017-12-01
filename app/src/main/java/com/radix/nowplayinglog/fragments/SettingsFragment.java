@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
@@ -11,6 +12,7 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import com.radix.nowplayinglog.R;
 import com.radix.nowplayinglog.util.Constants;
@@ -79,6 +81,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
           });
           alert.show();
         }
+      } else if (key.equals(getString(R.string.settings_dark_theme_key))) {
+        Log.i(TAG, "Dark theme toggled, restarting");
+        // Restart the app
+        Intent intent = getActivity().getIntent();
+        getActivity().finish();
+        getContext().startActivity(intent);
       }
     } else if (preference instanceof ListPreference) {
       ListPreference listPreference = (ListPreference) preference;

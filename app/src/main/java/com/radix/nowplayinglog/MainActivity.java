@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    setTheme(R.style.AppTheme_Dark_NoActionBar);
+    setDarkThemeIfSet();
     super.onCreate(savedInstanceState);
     //Remove title bar
     requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -84,6 +86,15 @@ public class MainActivity extends AppCompatActivity
     });
 
     mGoogleDriveBackupHandler = new GoogleDriveBackupHandler(this);
+  }
+
+  private void setDarkThemeIfSet() {
+    SharedPreferences defaultPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    boolean shouldUseDarkTheme = defaultPrefs.getBoolean(getString(R.string.settings_dark_theme_key), false);
+    if (shouldUseDarkTheme) {
+      Log.i(TAG, "Using dark theme");
+      setTheme(R.style.AppTheme_Dark_NoActionBar);
+    }
   }
 
   @Override

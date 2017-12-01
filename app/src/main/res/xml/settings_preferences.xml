@@ -32,6 +32,7 @@
             android:title="@string/settings_scrobble_app_title"/>
         <CheckBoxPreference
             android:defaultValue="false"
+            android:icon="?attr/icon_drawable_invert_color"
             android:key="@string/settings_dark_theme_key"
             android:summary="@string/settings_dark_theme_enabled_summary"
             android:summaryOff="@string/settings_dark_theme_disabled_summary"
