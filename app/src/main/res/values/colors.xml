@@ -5,9 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorRecyclerBackground">#F0F0F0</color>
 
-    <!--<color name="darkColorPrimary">#1e2756</color>-->
     <color name="darkColorPrimary">#256154</color>
     <color name="darkColorPrimaryDark">#141831</color>
     <color name="darkColorAccent">#2aac4b</color>
-    <color name="darkColorActivityBackground">#212122</color>
 </resources>
