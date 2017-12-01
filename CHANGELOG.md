@@ -1,3 +1,6 @@
+## 1.0.4
+- Added dark theme
+
 ## 1.0.3
 - Fixed location nulling in listener when the last location wasn't set.
 
