@@ -19,7 +19,6 @@
         <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
         <item name="colorAccent">@color/darkColorAccent</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/darkColorActivityBackground</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
