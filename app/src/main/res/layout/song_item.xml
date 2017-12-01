@@ -90,7 +90,7 @@
                     android:background="#00aabbcc"
                     android:scaleType="fitXY"
                     android:layout_alignParentTop="true"
-                    app:srcCompat="@drawable/favorite_selector"/>
+                    app:srcCompat="?attr/icon_drawable_favorite_selector_drawable"/>
 
                 <ImageButton
                     android:id="@+id/imageButtonMap"

@@ -4,8 +4,7 @@
     <attr name="icon_drawable_headset" format="reference"/>
     <attr name="icon_drawable_backup" format="reference"/>
     <attr name="icon_drawable_timeline" format="reference"/>
-    <attr name="icon_drawable_favorite_full" format="reference"/>
-    <attr name="icon_drawable_favorite_border" format="reference"/>
+    <attr name="icon_drawable_favorite_selector_drawable" format="reference"/>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,8 +19,7 @@
         <item name="icon_drawable_headset">@drawable/ic_headset_black_48dp</item>
         <item name="icon_drawable_backup">@drawable/ic_backup_black_48dp</item>
         <item name="icon_drawable_timeline">@drawable/ic_timeline_black_48dp</item>
-        <item name="icon_drawable_favorite_full">@drawable/ic_favorite_black_48dp</item>
-        <item name="icon_drawable_favorite_border">@drawable/ic_favorite_border_black_48dp</item>
+        <item name="icon_drawable_favorite_selector_drawable">@drawable/favorite_selector_light</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
@@ -37,8 +35,7 @@
         <item name="icon_drawable_headset">@drawable/ic_headset_white_48dp</item>
         <item name="icon_drawable_backup">@drawable/ic_backup_white_48dp</item>
         <item name="icon_drawable_timeline">@drawable/ic_timeline_white_48dp</item>
-        <item name="icon_drawable_favorite_full">@drawable/ic_favorite_white_48dp</item>
-        <item name="icon_drawable_favorite_border">@drawable/ic_favorite_border_white_48dp</item>
+        <item name="icon_drawable_favorite_selector_drawable">@drawable/favorite_selector_dark</item>
     </style>
 
     <style name="AppTheme.Dark.NoActionBar">
