@@ -21,6 +21,11 @@
     <string name="settings_scrobble_app_title">Enable Scrobbling</string>
     <string name="settings_scrobble_app_summary">Requires \"Simple Last.fm Scrobbler\"</string>
 
+    <string name="settings_dark_theme_key">settings_map_dark_theme_checkbox</string>
+    <string name="settings_dark_theme_title">Enable Dark Theme</string>
+    <string name="settings_dark_theme_enabled_summary">Dark Theme Enabled</string>
+    <string name="settings_dark_theme_disabled_summary">Dark Theme Disabled</string>
+
     <string name="google_maps_key">AIzaSyB_fGqsb1AJmf6A52ENKOmL-Xms8hSzY3E</string>
     <string name="file_create_error">Unable to create Google Drive backup file</string>
 
