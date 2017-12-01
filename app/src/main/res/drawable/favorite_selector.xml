@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true"
-    android:drawable="@drawable/ic_favorite_black_48dp"/>
+    android:drawable="?attr/icon_drawable_favorite_full"/>
     <!-- default -->
-    <item android:drawable="@drawable/ic_favorite_border_black_48dp"/>
+    <item android:drawable="?attr/icon_drawable_favorite_border"/>
 </selector>

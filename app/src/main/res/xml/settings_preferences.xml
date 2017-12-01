@@ -13,20 +13,20 @@
             android:title="@string/settings_map_title"/>
         <ListPreference
             android:defaultValue="default"
-            android:dialogIcon="@drawable/ic_radio_black_48dp"
+            android:dialogIcon="?attr/icon_drawable_radio"
             android:entries="@array/music_players"
             android:entryValues="@array/music_players_value"
-            android:icon="@drawable/ic_headset_black_48dp"
+            android:icon="?attr/icon_drawable_headset"
             android:key="@string/settings_music_player_key"
             android:title="@string/settings_music_player_title"/>
         <Preference
             android:title="@string/settings_google_drive_backup_title"
             android:key="@string/settings_google_drive_backup_key"
             android:summary=""
-            android:icon="@drawable/ic_backup_black_48dp"/>
+            android:icon="?attr/icon_drawable_backup"/>
         <CheckBoxPreference
             android:defaultValue="false"
-            android:icon="@drawable/ic_timeline_black_48dp"
+            android:icon="?attr/icon_drawable_timeline"
             android:key="@string/settings_scrobble_app_key"
             android:summary="@string/settings_scrobble_app_summary"
             android:title="@string/settings_scrobble_app_title"/>
