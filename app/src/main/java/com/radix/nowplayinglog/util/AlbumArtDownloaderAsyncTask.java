@@ -121,6 +121,10 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
   }
 
   private void addImageUrlToCache(Song song, String url) {
+    if (url == null || url.equals("")) {
+      Log.d(TAG, "Cannot cache empty or null song url. Not adding song to cache.");
+      return;
+    }
     SharedPreferences.Editor edit = mImageUrlCache.edit();
     edit.putString(song.getId(), url);
     edit.apply();
@@ -128,7 +132,10 @@ public class AlbumArtDownloaderAsyncTask extends AsyncTask<Void, Void, String> {
 
   private String getImageUrlFromCache(Song song) {
     if (mImageUrlCache.contains(song.getId())) {
-      return mImageUrlCache.getString(song.getId(), null);
+      String cachedSong = mImageUrlCache.getString(song.getId(), "");
+      if (!cachedSong.equals("")) {
+        return cachedSong;
+      }
     }
 
     return null;

@@ -1,4 +1,6 @@
 ## 1.0.5
+- Fixed bad song urls getting cached.
+
 ## 1.0.4
 - Added dark theme
 
