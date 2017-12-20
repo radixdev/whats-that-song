@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Now Playing Log</string>
+    <string name="enable_notification_listener_message">Now Playing Log vyžaduje přístup k oznámení a sledování oznámení Google. Aktivujte jej v Nastavení.</string>
+    <string name="enable_notification_listener_title">Povolte přístup k oznámení</string>
+    <string name="settings_map_title" translatable="false">Kde byla ta píseň?</string>
+    <string name="delimiter">od</string>
+</resources>

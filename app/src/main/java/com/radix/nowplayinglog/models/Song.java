@@ -3,6 +3,7 @@ package com.radix.nowplayinglog.models;
 import android.content.Context;
 import android.location.Location;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import com.radix.nowplayinglog.R;
 
@@ -13,6 +14,7 @@ import java.util.Locale;
  * The song object
  */
 public class Song {
+  private static final String TAG = Song.class.getName();
   private static final double LOCATION_DEFAULT_VALUE = -1d;
 
   private final String mTitle;
@@ -36,6 +38,11 @@ public class Song {
   public Song(Context context, String notificationTitle, long postTime, Location heardAtLocation) {
     // Don't want songs with "by" in the title to fuck it up
     String delimiter = getByDelimiter(context);
+
+    if (!notificationTitle.contains(delimiter)) {
+      Log.i(TAG, "notification did not contain delimiter : " + delimiter + " : notif was " + notificationTitle);
+      delimiter = " by ";
+    }
     int lastByIndex = notificationTitle.lastIndexOf(delimiter);
     mTitle = notificationTitle.substring(0, lastByIndex).trim();
     mArtist = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();

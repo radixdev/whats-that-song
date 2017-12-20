@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Now Playing Log</string>
     <string name="delimiter">" von "</string>
+    <string name="enable_notification_listener_message">Now Playing Log erfordert Benachrichtigungszugriff, um auf die Google-Benachrichtigung zu achten. Bitte aktiviere es in den Einstellungen.</string>
+    <string name="enable_notification_listener_title">Bitte aktivieren Sie den Benachrichtigungszugriff</string>
+    <string name="settings_map_title" translatable="false">Wo war das Lied?</string>
 </resources>

@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Now Playing Log</string>
     <string name="delimiter">" por "</string>
+    <string name="enable_notification_listener_message">\"Now Playing Log\" requiere Notification Access para ver la notificación de Google. Por favor, habilítelo en Configuración.</string>
+    <string name="enable_notification_listener_title">Habilite el acceso de notificación</string>
+    <string name="settings_map_title" translatable="false">¿Dónde estaba esa canción?</string>
 </resources>

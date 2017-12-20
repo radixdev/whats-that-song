@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Now Playing Log</string>
     <string name="delimiter">의</string>
+    <string name="enable_notification_listener_message">Now Playing Log (지금 재생 중)에는 Google 알림을 볼 수있는 알림 액세스가 필요합니다. 설정에서 사용하도록 설정하십시오.</string>
+    <string name="enable_notification_listener_title">알림 액세스 사용 설정</string>
+    <string name="settings_map_title" translatable="false">그 노래는 어디 있었 니?</string>
 </resources>
