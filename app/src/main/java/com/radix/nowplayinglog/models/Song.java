@@ -41,11 +41,13 @@ public class Song {
 
     if (!notificationTitle.contains(delimiter)) {
       Log.i(TAG, "notification did not contain delimiter : " + delimiter + " : notif was " + notificationTitle);
-      delimiter = " by ";
+      mTitle = notificationTitle;
+      mArtist = "";
+    } else {
+      int lastByIndex = notificationTitle.lastIndexOf(delimiter);
+      mTitle = notificationTitle.substring(0, lastByIndex).trim();
+      mArtist = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();
     }
-    int lastByIndex = notificationTitle.lastIndexOf(delimiter);
-    mTitle = notificationTitle.substring(0, lastByIndex).trim();
-    mArtist = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();
 
     mPostTime = postTime;
     mId = String.valueOf(mPostTime);

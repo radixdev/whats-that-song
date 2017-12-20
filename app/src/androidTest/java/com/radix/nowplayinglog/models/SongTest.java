@@ -19,7 +19,7 @@ public class SongTest {
 
   @Before
   public void setUp() {
-    mContext = InstrumentationRegistry.getContext();
+    mContext = InstrumentationRegistry.getTargetContext();
     changeLanguage(Locale.US);
   }
 
@@ -65,19 +65,11 @@ public class SongTest {
     Assert.assertEquals("Bobby Brown", song.getArtist());
   }
 
-  @Test(expected = StringIndexOutOfBoundsException.class)
+  @Test
   public void testGetSongThrowsExceptionOnMalformedBody() {
+    // Should not throw anything
     String body = "Molly dolly with super bobby";
     Song song = new Song(mContext, body, 0, null);
-  }
-
-  @Test
-  public void testGetSongInGermany() {
-    changeLanguage(Locale.GERMANY);
-    String body = "song von artist";
-    Song song = new Song(mContext, body, 0, null);
-    Assert.assertEquals("song", song.getTitle());
-    Assert.assertEquals("artist", song.getArtist());
   }
 
   private void changeLanguage(Locale locale) {
