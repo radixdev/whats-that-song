@@ -46,7 +46,7 @@ public class ListenerServiceT extends NotificationListenerService {
       String notificationTitle = (String) sbn.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE);
       final Song songWithoutLocation;
       try {
-        songWithoutLocation = new Song(notificationTitle, sbn.getPostTime(), null);
+        songWithoutLocation = new Song(this.getApplicationContext(), notificationTitle, sbn.getPostTime(), null);
       } catch (Exception e) {
         Log.d(TAG, "Failed to create song. Returning. Notification: " + notificationTitle, e);
         return;

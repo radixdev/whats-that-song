@@ -1,8 +1,10 @@
 package com.radix.nowplayinglog.models;
 
+import android.content.Context;
 import android.location.Location;
-import android.support.annotation.VisibleForTesting;
 import android.text.format.DateFormat;
+
+import com.radix.nowplayinglog.R;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -11,7 +13,6 @@ import java.util.Locale;
  * The song object
  */
 public class Song {
-  private static final String BY_DELIMITER = " by ";
   private static final double LOCATION_DEFAULT_VALUE = -1d;
 
   private final String mTitle;
@@ -29,13 +30,15 @@ public class Song {
   /**
    * Parses the title and artist from the notification.
    *
+   * @param context
    * @param notificationTitle the title straight from the notification itself
    */
-  public Song(String notificationTitle, long postTime, Location heardAtLocation){
+  public Song(Context context, String notificationTitle, long postTime, Location heardAtLocation) {
     // Don't want songs with "by" in the title to fuck it up
-    int lastByIndex = notificationTitle.lastIndexOf(BY_DELIMITER);
+    String delimiter = getByDelimiter(context);
+    int lastByIndex = notificationTitle.lastIndexOf(delimiter);
     mTitle = notificationTitle.substring(0, lastByIndex).trim();
-    mArtist = notificationTitle.substring(lastByIndex + BY_DELIMITER.length(), notificationTitle.length()).trim();
+    mArtist = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();
 
     mPostTime = postTime;
     mId = String.valueOf(mPostTime);
@@ -128,16 +131,6 @@ public class Song {
     return DateFormat.format("MMMM dd hh:mm aa", cal).toString();
   }
 
-  @VisibleForTesting
-  String getTitleFromNotificationString(String notificationString) {
-    return "";
-  }
-
-  @VisibleForTesting
-  String getArtistFromNotificationString(String notificationString) {
-    return "";
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -167,5 +160,9 @@ public class Song {
         ", mLatitude=" + mLatitude +
         ", mLongitude=" + mLongitude +
         '}';
+  }
+
+  private String getByDelimiter(Context context) {
+    return context.getString(R.string.delimiter);
   }
 }

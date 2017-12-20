@@ -143,7 +143,7 @@ public class SongStorageThing {
     return null;
   }
 
-  private void addTestSongs() {
+  private void addTestSongs(Context context) {
     if (!getAllSongs().isEmpty()) {
       return;
     }
@@ -186,7 +186,7 @@ public class SongStorageThing {
 
     for (int i = 0; i < songNames.size(); i++) {
       Location loc = locations.get(i % locations.size());
-      Song fakeSong1 = new Song(songNames.get(i), postTime + i + 1000L, loc);
+      Song fakeSong1 = new Song(context, songNames.get(i), postTime + i + 1000L, loc);
       storeSong(fakeSong1);
     }
   }
