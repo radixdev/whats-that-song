@@ -1,5 +1,6 @@
 ## 1.0.5
 - Fixed bad song urls getting cached.
+- Added support for French, Korean, German, Italian, Romanian, and Spanish.
 
 ## 1.0.4
 - Added dark theme

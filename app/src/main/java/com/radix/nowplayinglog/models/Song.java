@@ -45,8 +45,18 @@ public class Song {
       mArtist = "";
     } else {
       int lastByIndex = notificationTitle.lastIndexOf(delimiter);
-      mTitle = notificationTitle.substring(0, lastByIndex).trim();
-      mArtist = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();
+      String leftPart = notificationTitle.substring(0, lastByIndex).trim();
+      String rightPart = notificationTitle.substring(lastByIndex + delimiter.length(), notificationTitle.length()).trim();
+
+      if (!isRightToLeft()) {
+        // english
+        mTitle = leftPart;
+        mArtist = rightPart;
+      } else {
+        // korean for example
+        mTitle = rightPart;
+        mArtist = leftPart;
+      }
     }
 
     mPostTime = postTime;
@@ -173,5 +183,14 @@ public class Song {
 
   private String getByDelimiter(Context context) {
     return context.getString(R.string.delimiter);
+  }
+
+  private boolean isRightToLeft() {
+    String defaultLanguage = Locale.getDefault().getLanguage();
+
+    if (defaultLanguage.equals(Locale.KOREAN.getLanguage())) {
+      return true;
+    }
+    return false;
   }
 }
