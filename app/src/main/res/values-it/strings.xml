@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Now Playing Log</string>
     <string name="delimiter">" di "</string>
+    <string name="enable_notification_listener_message">\"Now Playing Log\" richiede l\'accesso alle notifiche per controllare la notifica di Google. Si prega di abilitare in Impostazioni.</string>
+    <string name="settings_map_title" translatable="false">Dov\'era quella canzone?</string>
+    <string name="enable_notification_listener_title">Si prega di abilitare l\'accesso di notifica</string>
 </resources>

@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">Now Playing Log</string>
     <string name="delimiter">" de "</string>
+    <string name="enable_notification_listener_message">\"Redarea jurnalului\" necesită accesarea notificărilor pentru a viziona notificarea Google. Activați-o în Setări.</string>
+    <string name="settings_map_title" translatable="false">Unde era cântecul ăsta?</string>
+    <string name="enable_notification_listener_title">Activați accesul la notificări</string>
 </resources>
